@@ -1,0 +1,27 @@
+tampilan awal
+
+1). home not login login
+getall\postingan(text,gambar,update_at,created_at)
+getall\komen(text,deleted_at,created_at)
+
+2). login
+post\email,password
+
+3) register
+post\username,email,pasword
+
+4) home login 
+getall\data profile yang login
+post\postingan(judul,description,gambar,created_at, update_at,delete_at) limit 10 postingan
+get\komen(text,deleted_at,created_at)
+
+5) my profile
+get\username,email,pasword
+get\mypostingan\
+
+6) get all comment
+get\allcomment\dipostingan
+
+7)
+
+
