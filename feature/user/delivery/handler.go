@@ -2,7 +2,6 @@ package delivery
 
 import (
 	"cleanarch/domain"
-	"cleanarch/feature/common"
 	_middleware "cleanarch/feature/common"
 	"cleanarch/feature/user"
 	_helper "cleanarch/helper"
@@ -22,11 +21,10 @@ func New(e *echo.Echo, us domain.UserUseCase) {
 		userUsecase: us,
 	}
 
-	e.POST("/user", handler.InsertUser())
-	e.GET("/user", handler.GetAllUser())
-	e.GET("/profile", handler.GetProfile(), _middleware.JWTMiddleware())
+	e.POST("/register", handler.InsertUser())
+	e.GET("/myprofile", handler.GetProfile(), _middleware.JWTMiddleware())
 	e.POST("/login", handler.LoginAuth())
-
+	e.DELETE("/user/delete", handler.DeleteById(), _middleware.JWTMiddleware())
 }
 func (uh *userHandler) InsertUser() echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -51,29 +49,9 @@ func (uh *userHandler) InsertUser() echo.HandlerFunc {
 		})
 	}
 }
-func (uh *userHandler) GetAllUser() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		tmp, err := uh.userUsecase.GetAll()
-
-		if err != nil {
-			log.Println("cannot get all data", err)
-			c.JSON(http.StatusInternalServerError, err)
-		}
-
-		if tmp == nil {
-			return c.JSON(http.StatusInternalServerError, "error from database")
-		}
-
-		res := map[string]interface{}{
-			"message": "succes get all data",
-			"data":    tmp,
-		}
-		return c.JSON(http.StatusOK, res)
-	}
-}
 func (uh *userHandler) GetProfile() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id := common.ExtractData(c)
+		id, _ := _middleware.ExtractData(c)
 		data, err := uh.userUsecase.GetProfile(id)
 
 		if err != nil {
@@ -103,5 +81,22 @@ func (uh *userHandler) LoginAuth() echo.HandlerFunc {
 			"name":  name,
 		}
 		return c.JSON(http.StatusOK, _helper.ResponseOkWithData("login success", data))
+	}
+}
+
+func (uh *userHandler) DeleteById() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		idFromToken, _ := _middleware.ExtractData(c)
+		if idFromToken == 0 {
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("you dont have access"))
+		}
+		row, errDel := uh.userUsecase.DeleteCase(idFromToken)
+		if errDel != nil {
+			return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to delete data user"))
+		}
+		if row != 1 {
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("failed to delete data user"))
+		}
+		return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success"))
 	}
 }

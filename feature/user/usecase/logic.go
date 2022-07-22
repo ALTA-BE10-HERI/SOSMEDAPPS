@@ -16,20 +16,20 @@ type userUseCase struct {
 	validate *validator.Validate
 }
 
-func New(ud domain.UserData) domain.UserUseCase {
+func New(uc domain.UserData) domain.UserUseCase {
 	return &userUseCase{
-		userData: ud,
+		userData: uc,
 	}
 }
 
-func (ud *userUseCase) AddUser(newUser domain.User) (domain.User, error) {
+func (uc *userUseCase) AddUser(newUser domain.User) (domain.User, error) {
 	hashed, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
 	if err != nil {
 		log.Println("error encrpt password", err)
 		return domain.User{}, err
 	}
 	newUser.Password = string(hashed)
-	inserted := ud.userData.Insert(newUser)
+	inserted := uc.userData.Insert(newUser)
 	if inserted.ID == 0 {
 		return domain.User{}, errors.New("cannot insert data")
 	}
@@ -37,18 +37,8 @@ func (ud *userUseCase) AddUser(newUser domain.User) (domain.User, error) {
 	return inserted, nil
 }
 
-func (ud *userUseCase) GetAll() ([]domain.User, error) {
-	data := ud.userData.GetAll()
-
-	if len(data) == 0 {
-		return nil, errors.New("no data")
-	}
-
-	return data, nil
-}
-
-func (ud *userUseCase) GetProfile(id int) (domain.User, error) {
-	data, err := ud.userData.GetSpecific(id)
+func (uc *userUseCase) GetProfile(id int) (domain.User, error) {
+	data, err := uc.userData.GetSpecific(id)
 
 	if err != nil {
 		log.Println("Use case", err.Error())
@@ -62,7 +52,12 @@ func (ud *userUseCase) GetProfile(id int) (domain.User, error) {
 	return data, nil
 }
 
-func (ud *userUseCase) LoginUserCase(authData user.LoginModel) (token, name string, err error) {
-	token, name, err = ud.userData.LoginUserData(authData)
+func (uc *userUseCase) LoginUserCase(authData user.LoginModel) (token, name string, err error) {
+	token, name, err = uc.userData.LoginUserData(authData)
 	return token, name, err
+}
+
+func (uc *userUseCase) DeleteCase(userID int) (row int, err error) {
+	row, err = uc.userData.DeleteData(userID)
+	return row, err
 }

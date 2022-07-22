@@ -1,0 +1,144 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/HERIWINONG01/storysix3/1.0.0
+  - description: Server real
+    url: 0.0.0.0
+info:
+  description: Social Media Apps Project by alltera accademy
+  version: "1.0.0"
+  title: Story six3
+tags:
+  - name: Authentication
+    description: operation comment
+  - name: Users
+    description: operation user
+  - name: Comment
+    description: operation comment
+paths:
+  /login:
+    post:
+      tags:
+        - Authentication
+      description: fitur untuk login ke sistem
+      requestBody:
+         content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:                 
+                  email:
+                    type: string
+                  password:
+                    type: string
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseLoginSuccess"
+              examples:
+                responseData1:
+                  description: response success 1
+                  value:
+                    {
+                      code: 200,
+                      status: "success",
+                      message: "Login Success",
+                      data:
+                        {
+                          name: "heritest",
+                          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co",
+                        },
+                    }
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value:
+                    {
+                      code: 400,
+                      status: "failed",
+                      message: "email or password incorrect",
+                    }
+  /myprofile:
+    get:
+      tags:
+        - Users
+      description: fitur untuk melihat profil yang login
+      security:
+        - JWTAuth: []
+      responses:
+        "403":
+          description: forbiden
+        "404":
+          description: No data
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success 1
+                  value:
+                    {
+                      id: 1,
+                      name: "alex",
+                      email: "alex@gmail.com",
+                      avatar_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                      created_at: 0001-01-01T00:00:00Z,
+                    }
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "bad request" }
+  
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    requestLogin:
+      type: object
+      properties:
+        "email":
+          type: string
+          minLength: 1
+        "password":
+          type: string
+          minLength: 1
+    responseLoginSuccess:
+      type: object
+      properties:
+        {
+          "code": { type: number },
+          "message": { type: string },
+          "status": { type: string },
+          "data": { type: object },
+        }
+    failedResponse:
+      type: object
+      properties:
+        {
+          "code": { type: number },
+          "message": { type: string },
+          "status": { type: string },
+        }

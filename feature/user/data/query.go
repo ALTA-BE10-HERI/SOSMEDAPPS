@@ -32,16 +32,6 @@ func (ud *userData) Insert(newUser domain.User) domain.User {
 	return cnv.ToModel()
 }
 
-func (ud *userData) GetAll() []domain.User {
-	var tmp []User
-	err := ud.db.Find(&tmp).Error
-
-	if err != nil {
-		log.Println("cannot retrive object", err.Error())
-		return nil
-	}
-	return ParseToArr(tmp)
-}
 func (ud *userData) GetSpecific(userID int) (domain.User, error) {
 	var tmp User
 	err := ud.db.Where("ID = ?", userID).First(&tmp).Error
@@ -68,7 +58,20 @@ func (ud *userData) LoginUserData(authData user.LoginModel) (token, name string,
 	if errCrypt != nil {
 		return "", "", errors.New("password incorrect")
 	}
-	token = common.GenerateToken(int(userData.ID))
+	token, _ = common.GenerateToken(int(userData.ID))
 
 	return token, userData.Nama, nil
+}
+
+func (ud *userData) DeleteData(userID int) (row int, err error) {
+	res := ud.db.Delete(&User{}, userID)
+	if res.Error != nil {
+		log.Println("cannot delete data", res.Error.Error())
+		return 0, res.Error
+	}
+	if res.RowsAffected < 1 {
+		log.Println("no data deleted", res.Error.Error())
+		return 0, errors.New("failed to delete data ")
+	}
+	return int(res.RowsAffected), nil
 }
