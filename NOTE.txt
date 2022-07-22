@@ -21,7 +21,13 @@ get\mypostingan\
 
 6) get all comment
 get\allcomment\dipostingan
+====================================================================
 
-7)
-
-
+env example
+export DBusername="root"
+export DBpassword="12345"
+export DBhost="localhost"
+export DBport="3306"
+export DBname="echorm"
+export SECRET="h1d3n"
+export SERVERPORT=8080
