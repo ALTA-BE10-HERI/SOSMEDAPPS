@@ -21,6 +21,8 @@ get\mypostingan\
 
 6) get all comment
 get\allcomment\dipostingan
+delete\comment{by:id}
+delete\{idcomment}
 ====================================================================
 
 env example
