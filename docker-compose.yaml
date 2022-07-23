@@ -15,12 +15,12 @@ services:
       DBpassword: "12345"
       DBhost: "localhost"
       DBport: 3306
-      DBname: "echorm"
+      DBname: "sosmedapps"
       SECRET: "h1d3n"
       SERVERPORT: 8080
     restart: always
     ports:
-      - 8001:8000
+      - 8000:8080
 
 
     
