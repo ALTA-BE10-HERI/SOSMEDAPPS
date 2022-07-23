@@ -11,16 +11,14 @@ type User struct {
 
 type UserUseCase interface {
 	AddUser(newUser User) (User, error)
-	GetAll() ([]User, error)
 	GetProfile(id int) (User, error)
 	LoginUserCase(authData user.LoginModel) (token, name string, err error)
-	// DeleteCase(userID int) bool
+	DeleteCase(userID int) (row int, err error)
 }
 
 type UserData interface {
 	Insert(newUser User) User
-	GetAll() []User
 	GetSpecific(userID int) (User, error)
 	LoginUserData(authData user.LoginModel) (token, name string, err error)
-	// DeleteData(userID int) bool
+	DeleteData(userID int) (row int, err error)
 }
