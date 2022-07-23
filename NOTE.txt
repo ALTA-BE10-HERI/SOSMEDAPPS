@@ -33,3 +33,5 @@ export DBport="3306"
 export DBname="echorm"
 export SECRET="h1d3n"
 export SERVERPORT=8080
+
+add
