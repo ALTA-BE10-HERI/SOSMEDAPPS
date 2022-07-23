@@ -19,8 +19,8 @@ jobs:
           script: |
             cd /home/ubuntu/SOSMEDAPPS
             git pull origin main
-            docker stop containersosmedapps
-            docker rm containersosmedapps
+            docker stop containerSosmedapps
+            docker rm containerSosmedapps
             docker rmi sosmedapp-api
             docker build -t sosmedapp-api:latest .
-            docker run -d -p 8080:8080 DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_PORT=${{ secrets.DB_PORT }} -e DB_HOST=${{ secrets.DB_HOST }} -e DB_NAME=${{ secrets.DB_NAME }} --name containersosmedapps sosmedapp-api:latest
+            docker run -d -p --name containerSosmedapps sosmedapp-api:latest
