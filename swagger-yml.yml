@@ -1,10 +1,10 @@
 openapi: 3.0.0
 servers:
   # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/HERIWINONG01/storysix3/1.0.0
   - description: Server real
     url: 0.0.0.0
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/HERIWINONG01/storysix3/1.0.0
 info:
   description: Social Media Apps Project by alltera accademy
   version: "1.0.0"
@@ -107,8 +107,88 @@ paths:
                 responseData1:
                   description: response failed 1
                   value: { code: 400, status: "failed", message: "bad request" }
-  
+  /register:
+    post:
+      tags:
+        - Users
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#"
+            example:
+              name: sutiaji
+              email: altera@gmail.com
+              password: qwerty123
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success 1
+                  value:
+                    {
+                      code: 200,
+                      status: "success",
+                      message: "success operation create data",
+                    }
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value:
+                    {
+                      code: 400,
+                      status: "failed",
+                      message: "please make sure all fields are filled in correctly",
+                    }
+  /user/delete:
+    delete:
+      tags:
+        - Users
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: iduser
+          in: query
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  value:
+                    code: 200
+                    status: "success"
+                    message: "Successful Operation"
 
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "Bad Request" }
 components:
   securitySchemes:
     bearerAuth:
