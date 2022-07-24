@@ -100,3 +100,29 @@ func (uh *userHandler) DeleteById() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success"))
 	}
 }
+
+func (uh *userHandler) UpdateById() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		idFromToken, _ := _middleware.ExtractData(c)
+		if idFromToken == 0 {
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("you dont have access"))
+		}
+		var tmp UpdateFormat
+		err := c.Bind(&tmp)
+		if err != nil {
+			log.Println("cannot parse data", err)
+			c.JSON(http.StatusBadRequest, "error read input")
+		}
+		data, err := uh.userUsecase.UpdateCase(idFromToken, tmp.ToModel())
+
+		if err != nil {
+			log.Println("cannot proces data", err)
+			c.JSON(http.StatusInternalServerError, err)
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "success update data",
+			"data":    data,
+		})
+	}
+}
