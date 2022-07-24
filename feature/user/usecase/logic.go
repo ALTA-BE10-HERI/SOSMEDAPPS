@@ -61,3 +61,25 @@ func (uc *userUseCase) DeleteCase(userID int) (row int, err error) {
 	row, err = uc.userData.DeleteData(userID)
 	return row, err
 }
+
+func (uc *userUseCase) UpdateCase(id int, newUser domain.User) (row int, err error) {
+	data, err := uc.userData.GetSpecific(id)
+	if err != nil {
+		log.Println("Use case", err.Error())
+		if err == gorm.ErrRecordNotFound {
+			return 0, errors.New("data not found")
+		} else {
+			return 0, errors.New("server error")
+		}
+	}
+
+	hashed, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
+	if err != nil {
+		log.Println("error encrpt password", err)
+		return 0, err
+	}
+	newUser.Password = string(hashed)
+	newUser.ID = data.ID
+	row, err = uc.userData.UpdateData(newUser)
+	return row, err
+}

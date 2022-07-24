@@ -35,3 +35,8 @@ export SECRET="h1d3n"
 export SERVERPORT=8080
 
 add ass
+
+#Faqih#
+UPDATE USER (Status Masih Error)
+Ada Error di feature/user/usecase/logic.go
+Baris no. 83
