@@ -23,4 +23,4 @@ jobs:
             docker rm containerSosmedapps
             docker rmi sosmedapp-api
             docker build -t sosmedapp-api:latest .
-            docker run -d -p 8080:8080 --name containerSosmedapps sosmedapp-api:latest
+            docker run -d -p 80:8080 --name containerSosmedapps sosmedapp-api:latest
