@@ -3,29 +3,29 @@ package usecase
 import (
 	"cleanarch/domain"
 	"cleanarch/feature/user"
-	"cleanarch/feature/user/data"
 	"errors"
+	"fmt"
 	"log"
 
-	"github.com/go-playground/validator/v10"
-	"golang.org/x/crypto/bcrypt"
+	_bcrypt "golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 type userUseCase struct {
 	userData domain.UserData
-	validate *validator.Validate
 }
 
-func New(ud domain.UserData, v *validator.Validate) domain.UserUseCase {
+func NewUserLogic(ud domain.UserData) domain.UserUseCase {
+	// return &userUseCase{
+	// 	userData: ud,
+	// }
 	return &userUseCase{
 		userData: ud,
-		validate: v,
 	}
 }
 
 func (uc *userUseCase) AddUser(newUser domain.User) (domain.User, error) {
-	hashed, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
+	hashed, err := _bcrypt.GenerateFromPassword([]byte(newUser.Password), _bcrypt.DefaultCost)
 	if err != nil {
 		log.Println("error encrpt password", err)
 		return domain.User{}, err
@@ -64,29 +64,47 @@ func (uc *userUseCase) DeleteCase(userID int) (row int, err error) {
 	return row, err
 }
 
-func (uc *userUseCase) UpdateCase(userID int, newUser domain.User) (domain.User, error) {
-	var cnv = data.FromModel(newUser)
-	err := uc.validate.Struct(cnv)
-	if err != nil {
-		log.Println("Validation errror : ", err.Error())
-		return domain.User{}, err
-	}
-	hashed, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
-	if err != nil {
-		log.Println("error encrpt password", err)
-		return domain.User{}, err
-	}
-	newUser.Password = string(hashed)
-	updated, err := uc.userData.UpdateData(userID, newUser)
+// func (uc *userUseCase) UpdateCase(userID int, newUser domain.User) (domain.User, error) {
+// 	var cnv = data.FromModel(newUser)
+// 	err := uc.validate.Struct(cnv)
+// 	if err != nil {
+// 		log.Println("Validation errror : ", err.Error())
+// 		return domain.User{}, err
+// 	}
+// 	hashed, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
+// 	if err != nil {
+// 		log.Println("error encrpt password", err)
+// 		return domain.User{}, err
+// 	}
+// 	newUser.Password = string(hashed)
+// 	updated, err := uc.userData.UpdateData(userID, newUser)
 
-	if err != nil {
-		log.Println("User Usecase", err.Error())
-		return domain.User{}, err
-	}
+// 	if err != nil {
+// 		log.Println("User Usecase", err.Error())
+// 		return domain.User{}, err
+// 	}
 
-	if updated.ID == 0 {
-		return domain.User{}, errors.New("cannot update data")
-	}
+// 	if updated.ID == 0 {
+// 		return domain.User{}, errors.New("cannot update data")
+// 	}
 
-	return updated, nil
+// 	return updated, nil
+// }
+func (uc *userUseCase) UpdateCase(input domain.User, idFromToken int) (row int, err error) {
+	userReq := map[string]interface{}{}
+	if input.Nama != "" {
+		userReq["nama"] = input.Nama
+	}
+	if input.Email != "" {
+		userReq["email"] = input.Email
+	}
+	if input.Password != "" {
+		passwordHashed, errorHash := _bcrypt.GenerateFromPassword([]byte(input.Password), 10)
+		if errorHash != nil {
+			fmt.Println("Error hash", errorHash.Error())
+		}
+		userReq["password"] = string(passwordHashed)
+	}
+	row, err = uc.userData.UpdateData(userReq, idFromToken)
+	return row, err
 }
