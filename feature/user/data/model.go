@@ -32,5 +32,6 @@ func FromModel(data domain.User) User {
 	res.Email = data.Email
 	res.Nama = data.Nama
 	res.Password = data.Password
+	res.ID = data.ID
 	return res
 }

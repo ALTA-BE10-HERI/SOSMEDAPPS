@@ -25,6 +25,7 @@ func New(e *echo.Echo, us domain.UserUseCase) {
 	e.GET("/myprofile", handler.GetProfile(), _middleware.JWTMiddleware())
 	e.POST("/login", handler.LoginAuth())
 	e.DELETE("/user/delete", handler.DeleteById(), _middleware.JWTMiddleware())
+	e.PUT("/update", handler.UpdateUser(), _middleware.JWTMiddleware())
 }
 func (uh *userHandler) InsertUser() echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -98,5 +99,29 @@ func (uh *userHandler) DeleteById() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("failed to delete data user"))
 		}
 		return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success"))
+	}
+}
+
+func (uh *userHandler) UpdateUser() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var tmp UpdateFormat
+		err := c.Bind(&tmp)
+
+		if err != nil {
+			log.Println("Cannot parse data", err)
+			c.JSON(http.StatusBadRequest, "error read input")
+		}
+
+		data, err := uh.userUsecase.UpdateCase(tmp.ID, tmp.ToModel())
+
+		if err != nil {
+			log.Println("Cannot proces data", err)
+			c.JSON(http.StatusInternalServerError, err)
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "success update data",
+			"data":    data,
+		})
 	}
 }

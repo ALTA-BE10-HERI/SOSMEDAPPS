@@ -75,3 +75,14 @@ func (ud *userData) DeleteData(userID int) (row int, err error) {
 	}
 	return int(res.RowsAffected), nil
 }
+
+func (ud *userData) UpdateData(userID int, newUser domain.User) (domain.User, error) {
+	var cnv = FromModel(newUser)
+	err := ud.db.Model(&cnv).Where("id = ?", userID).Updates(&cnv).Error
+	if err != nil {
+		log.Println("Cannot update object", err.Error())
+		return domain.User{}, err
+	}
+
+	return cnv.ToModel(), nil
+}

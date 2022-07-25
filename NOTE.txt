@@ -35,3 +35,14 @@ export SECRET="h1d3n"
 export SERVERPORT=8080
 
 add ass
+
+env faqih
+
+export DBusername="root"
+export DBpassword=""
+export DBhost="localhost"
+export DBport="3306"
+export DBname="fox"
+export SECRET="h1d3n"
+export SERVERPORT=8080
+
