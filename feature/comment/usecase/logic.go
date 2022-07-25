@@ -22,3 +22,13 @@ func (cs *commentUseCase) AddComment(IDLogin int, newText domain.Comment) (domai
 	return res, nil
 
 }
+
+func (cs *commentUseCase) GetComment() ([]domain.Comment, error) {
+	res := cs.commentData.GetComment()
+
+	if len(res) == 0 {
+		return nil, errors.New("no data found")
+	}
+
+	return res, nil
+}
