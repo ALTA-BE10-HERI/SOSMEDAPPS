@@ -27,3 +27,15 @@ func (cd *commentData) Insert(newText domain.Comment) domain.Comment {
 
 	return cnv.ToDomain()
 }
+
+func (cd *commentData) GetComment() []domain.Comment {
+	var data []Comment
+	err := cd.db.Find(&data)
+
+	if err.Error != nil {
+		log.Println("Cannot read comment", err.Error.Error())
+		return nil
+	}
+
+	return ParseToArrComment(data)
+}

@@ -15,12 +15,12 @@ type Comment struct {
 
 type CommentUseCase interface {
 	AddComment(newText Comment) (Comment, error)
-	//GetAllComment() ([]Comment, error)
+	GetAllComment() ([]Comment, error)
 	//DeleteComment(int) error
 }
 
 type CommentData interface {
 	Insert(newText Comment) Comment
-	//GetComment() []Comment
+	GetComment() []Comment
 	//DeleteComment(IDComment int) bool
 }

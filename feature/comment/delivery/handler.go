@@ -19,6 +19,7 @@ func New(e *echo.Echo, cs domain.CommentUseCase) {
 	}
 
 	e.POST("/comment/create", handler.InsertComment(), _middleware.JWTMiddleware())
+	e.GET("/comment", handler.InsertComment())
 
 }
 func (ch *commentHandler) InsertComment() echo.HandlerFunc {
@@ -40,6 +41,21 @@ func (ch *commentHandler) InsertComment() echo.HandlerFunc {
 
 		return c.JSON(http.StatusCreated, map[string]interface{}{
 			"message": "Success create comment",
+			"data":    data,
+		})
+	}
+}
+
+func (ch *commentHandler) GetAllComment() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		data, err := ch.commentUseCase.GetAllComment()
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+
+		return c.JSON(http.StatusFound, map[string]interface{}{
+			"message": "data found",
 			"data":    data,
 		})
 	}
