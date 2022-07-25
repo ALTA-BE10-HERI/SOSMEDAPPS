@@ -9,7 +9,7 @@ import (
 type User struct {
 	gorm.Model
 	Nama     string
-	Email    string `gorm:"unique"`
+	Email    string `gorm:"unique" validate:"required,email"`
 	Password string
 }
 

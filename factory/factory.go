@@ -1,6 +1,7 @@
 package factory
 
 import (
+	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 
@@ -11,6 +12,7 @@ import (
 
 func InitFactory(e *echo.Echo, db *gorm.DB) {
 	userData := ud.New(db)
-	useCase := us.NewUserLogic(userData)
+	validator := validator.New()
+	useCase := us.UserLogic(userData, validator)
 	userDelivery.New(e, useCase)
 }

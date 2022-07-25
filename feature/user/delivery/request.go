@@ -4,8 +4,8 @@ import "cleanarch/domain"
 
 type InsertFormat struct {
 	Nama     string `json:"nama"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" gorm:"unique" validate:"required,email"`
+	Password string `json:"password" `
 }
 
 func (i *InsertFormat) ToModel() domain.User {
