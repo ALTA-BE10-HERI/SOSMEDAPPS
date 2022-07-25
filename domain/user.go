@@ -1,12 +1,17 @@
 package domain
 
-import "cleanarch/feature/user"
+import (
+	"cleanarch/feature/user"
+	"time"
+)
 
 type User struct {
-	ID       int
-	Nama     string
-	Email    string
-	Password string
+	ID        int
+	Nama      string
+	Email     string
+	Password  string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type UserUseCase interface {

@@ -1,20 +1,26 @@
 package data
 
-import "cleanarch/domain"
+import (
+	"cleanarch/domain"
+
+	"gorm.io/gorm"
+)
 
 type User struct {
-	ID       int    `json:"id" form:"id" gorm:"prmaryKey;autoIncrement"`
-	Nama     string `json:"nama" form:"nama" validate:"required"`
-	Email    string `json:"email" form:"email" validate:"required,email"`
-	Password string `json:"password" form:"password" validate:"required"`
+	gorm.Model
+	Nama     string
+	Email    string `gorm:"unique"`
+	Password string
 }
 
 func (u *User) ToModel() domain.User {
 	return domain.User{
-		ID:       u.ID,
-		Nama:     u.Nama,
-		Email:    u.Email,
-		Password: u.Password,
+		ID:        int(u.ID),
+		Nama:      u.Nama,
+		Email:     u.Email,
+		Password:  u.Password,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
 	}
 }
 
@@ -32,6 +38,5 @@ func FromModel(data domain.User) User {
 	res.Email = data.Email
 	res.Nama = data.Nama
 	res.Password = data.Password
-	res.ID = data.ID
 	return res
 }
