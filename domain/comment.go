@@ -13,14 +13,14 @@ type Comment struct {
 	Deleted_at time.Time
 }
 
-type CommentUser interface {
-	PostComment(IDPosting int, newText Comment) (Comment, error)
-	GetAllComment() ([]Comment, error)
-	DeleteComment(int) error
+type CommentUseCase interface {
+	AddComment(newText Comment) (Comment, error)
+	//GetAllComment() ([]Comment, error)
+	//DeleteComment(int) error
 }
 
 type CommentData interface {
 	Insert(newText Comment) Comment
-	GetComment() []Comment
-	DeleteComment(IDComment int) bool
+	//GetComment() []Comment
+	//DeleteComment(IDComment int) bool
 }

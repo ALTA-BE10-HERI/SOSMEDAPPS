@@ -16,7 +16,7 @@ type Comment struct {
 
 func (c *Comment) ToDomain() domain.Comment {
 	return domain.Comment{
-		ID:         int(c.ID),
+		ID:         c.ID,
 		ID_Posting: c.ID_Posting,
 		ID_Users:   c.ID_Users,
 		Comment:    c.Comment,
@@ -36,7 +36,6 @@ func ParseToArrComment(arr []Comment) []domain.Comment {
 
 func FromDomain(data domain.Comment) Comment {
 	var res Comment
-	res.ID = data.ID
 	res.ID_Posting = data.ID_Posting
 	res.ID_Users = data.ID_Users
 	res.Comment = data.Comment
