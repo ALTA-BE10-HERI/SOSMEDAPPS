@@ -25,6 +25,7 @@ func New(e *echo.Echo, us domain.UserUseCase) {
 	e.GET("/myprofile", handler.GetProfile(), _middleware.JWTMiddleware())
 	e.POST("/login", handler.LoginAuth())
 	e.DELETE("/user/delete", handler.DeleteById(), _middleware.JWTMiddleware())
+	e.PUT("/update", handler.UpdateUser(), _middleware.JWTMiddleware())
 }
 func (uh *userHandler) InsertUser() echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -101,22 +102,20 @@ func (uh *userHandler) DeleteById() echo.HandlerFunc {
 	}
 }
 
-func (uh *userHandler) UpdateById() echo.HandlerFunc {
+func (uh *userHandler) UpdateUser() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		idFromToken, _ := _middleware.ExtractData(c)
-		if idFromToken == 0 {
-			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("you dont have access"))
-		}
 		var tmp UpdateFormat
 		err := c.Bind(&tmp)
-		if err != nil {
-			log.Println("cannot parse data", err)
-			c.JSON(http.StatusBadRequest, "error read input")
-		}
-		data, err := uh.userUsecase.UpdateCase(idFromToken, tmp.ToModel())
 
 		if err != nil {
-			log.Println("cannot proces data", err)
+			log.Println("Cannot parse data", err)
+			c.JSON(http.StatusBadRequest, "error read input")
+		}
+
+		data, err := uh.userUsecase.UpdateCase(tmp.ID, tmp.ToModel())
+
+		if err != nil {
+			log.Println("Cannot proces data", err)
 			c.JSON(http.StatusInternalServerError, err)
 		}
 

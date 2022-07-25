@@ -14,7 +14,7 @@ type UserUseCase interface {
 	GetProfile(id int) (User, error)
 	LoginUserCase(authData user.LoginModel) (token, name string, err error)
 	DeleteCase(userID int) (row int, err error)
-	UpdateCase(id int, newUser User) (User, error)
+	UpdateCase(userID int, newUser User) (User, error)
 }
 
 type UserData interface {
@@ -22,5 +22,5 @@ type UserData interface {
 	GetSpecific(userID int) (User, error)
 	LoginUserData(authData user.LoginModel) (token, name string, err error)
 	DeleteData(userID int) (row int, err error)
-	UpdateData(oldUser User, newUser User) User
+	UpdateData(userID int, newUser User) (User, error)
 }
