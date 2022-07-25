@@ -4,9 +4,9 @@ servers:
   - description: Server real
     url: 0.0.0.0
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/HERIWINONG01/storysix3/1.0.0
+    url: https://app.swaggerhub.com/apis/DianNurdiana-alt/story-six_3/1.0.0
 info:
-  description: Social Media Apps Project by alltera accademy
+  description: Social Media Apps Project by altera accademy
   version: "1.0.0"
   title: Story six3
 tags:
@@ -14,6 +14,8 @@ tags:
     description: operation comment
   - name: Users
     description: operation user
+  - name: Post
+    description: operation post
   - name: Comment
     description: operation comment
 paths:
@@ -67,50 +69,11 @@ paths:
                       code: 400,
                       status: "failed",
                       message: "email or password incorrect",
-                    }
-  /myprofile:
-    get:
-      tags:
-        - Users
-      description: fitur untuk melihat profil yang login
-      security:
-        - JWTAuth: []
-      responses:
-        "403":
-          description: forbiden
-        "404":
-          description: No data
-        "200":
-          description: Success Response
-          content:
-            application/json:
-              schema:
-                $ref: "#"
-              examples:
-                response data:
-                  description: response success 1
-                  value:
-                    {
-                      id: 1,
-                      name: "alex",
-                      email: "alex@gmail.com",
-                      avatar_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
-                      created_at: 0001-01-01T00:00:00Z,
-                    }
-        "400":
-          description: Failed Response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/failedResponse"
-              examples:
-                responseData1:
-                  description: response failed 1
-                  value: { code: 400, status: "failed", message: "bad request" }
+                    }  
   /register:
     post:
       tags:
-        - Users
+        - Authentication
       parameters: []
       requestBody:
         content:
@@ -152,6 +115,97 @@ paths:
                       status: "failed",
                       message: "please make sure all fields are filled in correctly",
                     }
+  /myprofile:
+    get:
+      tags:
+        - Users
+      description: fitur untuk melihat profil yang login
+      security:
+        - JWTAuth: []
+      responses:
+        "403":
+          description: forbidden
+        "404":
+          description: No data
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success 1
+                  value:
+                    {
+                      id: 1,
+                      name: "alex",
+                      email: "alex@gmail.com",
+                      avatar_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
+                      created_at: 0001-01-01T00:00:00Z,
+                    }
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "bad request" }
+  /user/update:
+   put:
+      tags:
+        - Users
+      description: fitur untuk mengupdate profile user yang login
+      security:
+        - JWTAuth: []
+      requestBody:
+         content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:                 
+                  New ID User:
+                    type: integer
+                  New Name:
+                    type: string
+                  New Email:
+                    type: string
+                  New Password:
+                    type: string
+      responses:
+         "201":
+            description: success response
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/successResponse"
+                examples:
+                  responseData1:
+                    description: response success
+                    value:
+                      {
+                        code: 201,
+                        status: "success",
+                        message: "Successfully updated data",
+                      }
+         "400":
+            description: Failed Response
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/failedResponse"
+                examples:
+                  responseData1:
+                    description: response failed 1
+                    value:
+                      {
+                        code: 400,
+                        status: "failed",
+                        message: "Please make sure all fields are filled in correctly",
+                      }  
   /user/delete:
     delete:
       tags:
@@ -178,7 +232,6 @@ paths:
                     code: 200
                     status: "success"
                     message: "Successful Operation"
-
         "400":
           description: Failed Response
           content:
@@ -189,6 +242,206 @@ paths:
                 responseData1:
                   description: response failed 1
                   value: { code: 400, status: "failed", message: "Bad Request" }
+   
+  /create:
+    post:
+      tags:
+        - Post
+      description: fitur untuk membuat postingan
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+              schema:
+                type: object
+                properties: 
+                  Title:
+                    type: string              
+                  Image:
+                    type: integer
+                  Caption:
+                    type: string
+      responses:
+        '201':
+            description: Success Response
+            content:
+              application/json:
+                schema:
+                  $ref: "#"
+                examples:
+                  response data:
+                    description: response success 1
+                    value:
+                      {
+                        Title: "Hello!",
+                        Image: 0,
+                        Caption: "Good Morning!"
+                      }
+        '500':
+          description: "Internal server error"
+  /post/update:
+    put:
+      tags:
+        - Post
+      description: fitur untuk mengupdate postingan user yang login
+      security:
+        - JWTAuth: []
+      requestBody:
+         content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties: 
+                  Title:
+                    type: string                
+                  Image:
+                    type: integer
+                  Caption:
+                    type: string
+      responses:
+        "201":
+            description: Success Response
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/successResponse"
+        "400":
+            description: Failed Response
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/failedResponse"
+                examples:
+                  responseData1:
+                    description: response failed 1
+                    value:
+                      {
+                        code: 400,
+                        status: "failed",
+                        message: "Please make sure all fields are filled in correctly",
+                      }       
+  /post/delete:
+    delete:
+      tags:
+        - Post
+      description: fitur menghapus postingan
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: idpost
+          in: query
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  value:
+                    code: 200
+                    status: "success"
+                    message: "Successful Operation"
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "Bad Request" }  
+ 
+  /comment:
+    get:
+      tags:
+        - Comment
+      description: fitur menampilkan semua komentar
+      security:
+        - JWTAuth: []
+      responses:
+        "403":
+          description: forbidden
+        "404":
+          description: No data
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/successResponse"
+                  examples:
+                  description: response success
+                  value: { code: 200, status: "success", message: "success get data" }
+  /comment/create:
+    post:
+      tags:
+        - Comment
+      description: fitur untuk menambahkan komentar
+      security:
+        - JWTAuth: []
+      requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comment:
+                    type: string     
+      responses:
+        '201':
+          description: "Comment successfully posted"
+          content:
+            application/json:
+              schema:
+               type: object
+               properties:
+                comment:
+                  type: string
+                created_at:
+                  type: string
+                  format: date-time          
+        '500':
+          description: "Internal server error"
+  /comment/delete:
+    delete:
+      tags:
+        - Comment
+      description: fitur untuk menghapus komentar
+      security:
+        - JWTAuth: []
+
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success
+                  value: { code: 200, status: "success", message: "Successfully operation" } 
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: { code: 400, status: "failed", message: "Bad Request" } 
+
 components:
   securitySchemes:
     bearerAuth:
@@ -196,6 +449,19 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    modelUser:
+      type: object
+      properties:
+        "ID":
+          type: integer
+          format: int32
+        "Nama":
+          type: string
+        "Email":
+          type: string
+        "Password": 
+          type: string
+          format: password
     requestLogin:
       type: object
       properties:
@@ -213,6 +479,14 @@ components:
           "message": { type: string },
           "status": { type: string },
           "data": { type: object },
+        }
+    successResponse:
+      type: object
+      properties:
+        {
+          "code": { type: number },
+          "message": { type: string },
+          "status": { type: string },
         }
     failedResponse:
       type: object
