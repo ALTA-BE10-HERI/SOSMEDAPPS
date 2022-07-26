@@ -6,21 +6,20 @@ import (
 
 type Comment struct {
 	ID         int
-	ID_Posting int
-	ID_Users   int
 	Comment    string
 	Created_at time.Time
-	Deleted_at time.Time
+	ID_Users   int
+	ID_Posting int
 }
 
 type CommentUseCase interface {
-	AddComment(newText Comment) (Comment, error)
+	AddComment(ID_Users int, newText Comment) (Comment, error)
 	GetAllComment() ([]Comment, error)
-	//DeleteComment(int) error
+	DeleteComment(IDComment int) (row int, err error)
 }
 
 type CommentData interface {
 	Insert(newText Comment) Comment
 	GetComment() []Comment
-	//DeleteComment(IDComment int) bool
+	Delete(IDComment int) (row int, err error)
 }

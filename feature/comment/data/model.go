@@ -6,22 +6,20 @@ import (
 )
 
 type Comment struct {
-	ID         int `json:"id" form:"id" gorm:"primaryKey;autoIncrement"`
-	ID_Posting int
-	ID_Users   int
+	ID         int       `json:"id" form:"id" gorm:"primaryKey;autoIncrement"`
 	Comment    string    `json:"comment" form:"comment"`
 	Created_at time.Time `gorm:"autoCreateTime"`
-	Deleted_at time.Time `gorm:"autoCreateTime"`
+	ID_Users   int
+	ID_Posting int
 }
 
 func (c *Comment) ToDomain() domain.Comment {
 	return domain.Comment{
 		ID:         c.ID,
-		ID_Posting: c.ID_Posting,
-		ID_Users:   c.ID_Users,
 		Comment:    c.Comment,
 		Created_at: c.Created_at,
-		Deleted_at: c.Deleted_at,
+		ID_Users:   c.ID_Users,
+		ID_Posting: c.ID_Posting,
 	}
 }
 
@@ -36,8 +34,11 @@ func ParseToArrComment(arr []Comment) []domain.Comment {
 
 func FromDomain(data domain.Comment) Comment {
 	var res Comment
-	res.ID_Posting = data.ID_Posting
-	res.ID_Users = data.ID_Users
+	res.ID = data.ID
 	res.Comment = data.Comment
+	res.Created_at = data.Created_at
+	res.ID_Users = data.ID_Users
+	res.ID_Posting = data.ID_Posting
+
 	return res
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	commentData "cleanarch/feature/comment/data"
 	userData "cleanarch/feature/user/data"
 
 	"gorm.io/driver/mysql"
@@ -26,5 +27,5 @@ func InitDB(cfg *config.AppConfig) *gorm.DB {
 	return db
 }
 func MigrateData(db *gorm.DB) {
-	db.AutoMigrate(userData.User{})
+	db.AutoMigrate(userData.User{}, commentData.Comment{})
 }
