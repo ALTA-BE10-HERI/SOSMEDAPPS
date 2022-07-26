@@ -18,9 +18,6 @@ type userUseCase struct {
 }
 
 func UserLogic(ud domain.UserData, v *validator.Validate) domain.UserUseCase {
-	// return &userUseCase{
-	// 	userData: ud,
-	// }
 	return &userUseCase{
 		userData: ud,
 		validate: v,
