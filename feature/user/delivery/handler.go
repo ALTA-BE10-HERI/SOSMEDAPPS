@@ -22,10 +22,10 @@ func New(e *echo.Echo, us domain.UserUseCase) {
 	}
 
 	e.POST("/register", handler.InsertUser())
-	e.GET("/myprofile", handler.GetProfile(), _middleware.JWTMiddleware())
+	e.GET("/users", handler.GetProfile(), _middleware.JWTMiddleware())
 	e.POST("/login", handler.LoginAuth())
-	e.DELETE("/user/delete", handler.DeleteById(), _middleware.JWTMiddleware())
-	e.PUT("/update", handler.UpdateUser(), _middleware.JWTMiddleware())
+	e.DELETE("/users", handler.DeleteById(), _middleware.JWTMiddleware())
+	e.PUT("/users", handler.UpdateUser(), _middleware.JWTMiddleware())
 }
 func (uh *userHandler) InsertUser() echo.HandlerFunc {
 	return func(c echo.Context) error {

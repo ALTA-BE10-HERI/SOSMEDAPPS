@@ -3,9 +3,9 @@ package delivery
 import "cleanarch/domain"
 
 type InsertFormat struct {
-	Nama     string `json:"nama"`
-	Email    string `json:"email" gorm:"unique" validate:"required,email"`
-	Password string `json:"password" `
+	Nama     string `json:"nama" form:"nama"`
+	Email    string `json:"email" form:"email" gorm:"unique" validate:"required,email"`
+	Password string `json:"password" form:"password"`
 }
 
 func (i *InsertFormat) ToModel() domain.User {
