@@ -3,12 +3,12 @@ package usecase
 import (
 	"cleanarch/domain"
 	"cleanarch/feature/user"
-	"cleanarch/feature/user/data"
 	"errors"
+	"fmt"
 	"log"
 
-	"github.com/go-playground/validator/v10"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/go-playground/validator"
+	_bcrypt "golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -17,7 +17,7 @@ type userUseCase struct {
 	validate *validator.Validate
 }
 
-func New(ud domain.UserData, v *validator.Validate) domain.UserUseCase {
+func UserLogic(ud domain.UserData, v *validator.Validate) domain.UserUseCase {
 	return &userUseCase{
 		userData: ud,
 		validate: v,
@@ -25,7 +25,11 @@ func New(ud domain.UserData, v *validator.Validate) domain.UserUseCase {
 }
 
 func (uc *userUseCase) AddUser(newUser domain.User) (domain.User, error) {
-	hashed, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
+	if newUser.Nama == "" || newUser.Email == "" || newUser.Password == "" {
+		return domain.User{}, errors.New("please make sure all fields are filled in correctly")
+	}
+	hashed, err := _bcrypt.GenerateFromPassword([]byte(newUser.Password), _bcrypt.DefaultCost)
+
 	if err != nil {
 		log.Println("error encrpt password", err)
 		return domain.User{}, err
@@ -35,7 +39,6 @@ func (uc *userUseCase) AddUser(newUser domain.User) (domain.User, error) {
 	if inserted.ID == 0 {
 		return domain.User{}, errors.New("cannot insert data")
 	}
-
 	return inserted, nil
 }
 
@@ -64,29 +67,21 @@ func (uc *userUseCase) DeleteCase(userID int) (row int, err error) {
 	return row, err
 }
 
-func (uc *userUseCase) UpdateCase(userID int, newUser domain.User) (domain.User, error) {
-	var cnv = data.FromModel(newUser)
-	err := uc.validate.Struct(cnv)
-	if err != nil {
-		log.Println("Validation errror : ", err.Error())
-		return domain.User{}, err
+func (uc *userUseCase) UpdateCase(input domain.User, idFromToken int) (row int, err error) {
+	userReq := map[string]interface{}{}
+	if input.Nama != "" {
+		userReq["nama"] = input.Nama
 	}
-	hashed, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
-	if err != nil {
-		log.Println("error encrpt password", err)
-		return domain.User{}, err
+	if input.Email != "" {
+		userReq["email"] = input.Email
 	}
-	newUser.Password = string(hashed)
-	updated, err := uc.userData.UpdateData(userID, newUser)
-
-	if err != nil {
-		log.Println("User Usecase", err.Error())
-		return domain.User{}, err
+	if input.Password != "" {
+		passwordHashed, errorHash := _bcrypt.GenerateFromPassword([]byte(input.Password), 10)
+		if errorHash != nil {
+			fmt.Println("Error hash", errorHash.Error())
+		}
+		userReq["password"] = string(passwordHashed)
 	}
-
-	if updated.ID == 0 {
-		return domain.User{}, errors.New("cannot update data")
-	}
-
-	return updated, nil
+	row, err = uc.userData.UpdateData(userReq, idFromToken)
+	return row, err
 }

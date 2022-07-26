@@ -22,10 +22,10 @@ func New(e *echo.Echo, us domain.UserUseCase) {
 	}
 
 	e.POST("/register", handler.InsertUser())
-	e.GET("/myprofile", handler.GetProfile(), _middleware.JWTMiddleware())
+	e.GET("/users", handler.GetProfile(), _middleware.JWTMiddleware())
 	e.POST("/login", handler.LoginAuth())
-	e.DELETE("/user/delete", handler.DeleteById(), _middleware.JWTMiddleware())
-	e.PUT("/update", handler.UpdateUser(), _middleware.JWTMiddleware())
+	e.DELETE("/users", handler.DeleteById(), _middleware.JWTMiddleware())
+	e.PUT("/users", handler.UpdateUser(), _middleware.JWTMiddleware())
 }
 func (uh *userHandler) InsertUser() echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -38,7 +38,10 @@ func (uh *userHandler) InsertUser() echo.HandlerFunc {
 		}
 
 		data, err := uh.userUsecase.AddUser(tmp.ToModel())
-
+		// tanya mas jerry untuk menampilkan json eror pas inputan user kosong
+		// if data != nil {
+		// 	return c.JSON(http.StatusBadRequest,_helper.ResponseFailed("cek your input"))
+		// }
 		if err != nil {
 			log.Println("cannot proces data", err)
 			c.JSON(http.StatusInternalServerError, err)
@@ -62,7 +65,7 @@ func (uh *userHandler) GetProfile() echo.HandlerFunc {
 				return c.JSON(http.StatusInternalServerError, err.Error())
 			}
 		}
-		return c.JSON(http.StatusFound, map[string]interface{}{
+		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message": "data found",
 			"data":    data,
 		})
@@ -104,24 +107,21 @@ func (uh *userHandler) DeleteById() echo.HandlerFunc {
 
 func (uh *userHandler) UpdateUser() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var tmp UpdateFormat
+		var tmp InsertFormat
+		idFromToken, _ := _middleware.ExtractData(c)
 		err := c.Bind(&tmp)
-
 		if err != nil {
-			log.Println("Cannot parse data", err)
-			c.JSON(http.StatusBadRequest, "error read input")
+
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("failed to bind data, check your input"))
+		}
+		row, err := uh.userUsecase.UpdateCase(tmp.ToModel(), idFromToken)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed update data users, Errors"))
+		}
+		if row == 0 {
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("failed update data users, no data"))
 		}
 
-		data, err := uh.userUsecase.UpdateCase(tmp.ID, tmp.ToModel())
-
-		if err != nil {
-			log.Println("Cannot proces data", err)
-			c.JSON(http.StatusInternalServerError, err)
-		}
-
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "success update data",
-			"data":    data,
-		})
+		return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success"))
 	}
 }

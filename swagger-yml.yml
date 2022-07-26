@@ -51,7 +51,7 @@ paths:
                       message: "Login Success",
                       data:
                         {
-                          name: "heritest",
+                          name: "alex",
                           token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co",
                         },
                     }
@@ -81,8 +81,8 @@ paths:
             schema:
               $ref: "#"
             example:
-              name: sutiaji
-              email: altera@gmail.com
+              name: alex
+              email: alexalttera@mail.com
               password: qwerty123
       responses:
         "200":
@@ -99,6 +99,15 @@ paths:
                       code: 200,
                       status: "success",
                       message: "success operation create data",
+                      data:
+                        {
+                          ID: 39,
+                          Nama: "alex",
+                          Email: "alexalttera@mail.com",
+                          Password: "$2a$10$Kj32oCSvB/ifssRWZinbE..3DurySB2kIeL5FY2BOMLsPSo90n2s2",
+                          CreatedAt: "2022-07-26T10:43:46.656+07:00",
+                          UpdatedAt: "2022-07-26T10:43:46.656+07:00"
+                        }
                     }
         "400":
           description: Failed Response
@@ -115,7 +124,7 @@ paths:
                       status: "failed",
                       message: "please make sure all fields are filled in correctly",
                     }
-  /myprofile:
+  /users:
     get:
       tags:
         - Users
@@ -123,10 +132,6 @@ paths:
       security:
         - JWTAuth: []
       responses:
-        "403":
-          description: forbidden
-        "404":
-          description: No data
         "200":
           description: Success Response
           content:
@@ -138,11 +143,13 @@ paths:
                   description: response success 1
                   value:
                     {
-                      id: 1,
-                      name: "alex",
-                      email: "alex@gmail.com",
-                      avatar_url: "https://gudanggroup3.s3.amazonaws.com/2022-07-05%2015%3A17%3A33.jpg",
-                      created_at: 0001-01-01T00:00:00Z,
+                      ID: 1,
+                      Nama: "alex",
+                      Email: "alex@gmail.com",
+                      Password: "$2a$10$Kj32oCSvB/ifssRWZinbE..3DurySB2kIeL5FY2BOMLsPSo90n2s2",
+                      CreatedAt: 2022-07-26T03:43:46.656Z,
+                      UpdatedAt: 2022-07-26T03:43:46.656Z
+
                     }
         "400":
           description: Failed Response
@@ -154,8 +161,7 @@ paths:
                 responseData1:
                   description: response failed 1
                   value: { code: 400, status: "failed", message: "bad request" }
-  /user/update:
-   put:
+    put:
       tags:
         - Users
       description: fitur untuk mengupdate profile user yang login
@@ -163,13 +169,21 @@ paths:
         - JWTAuth: []
       requestBody:
          content:
-            multipart/form-data:
+            aplication/json:
               schema:
                 type: object
                 properties:                 
-                  New ID User:
-                    type: integer
-                  New Name:
+                  New Nama:
+                    type: string
+                  New Email:
+                    type: string
+                  New Password:
+                    type: string
+            multipart/formdata:
+              schema:
+                type: object
+                properties:                 
+                  New Nama:
                     type: string
                   New Email:
                     type: string
@@ -206,7 +220,6 @@ paths:
                         status: "failed",
                         message: "Please make sure all fields are filled in correctly",
                       }  
-  /user/delete:
     delete:
       tags:
         - Users
@@ -243,7 +256,44 @@ paths:
                   description: response failed 1
                   value: { code: 400, status: "failed", message: "Bad Request" }
    
-  /create:
+  /posts:
+    get:
+      tags:
+        - Post
+      description: fitur untuk melihat profil yang login
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success
+                  value:
+                    {
+                      ID: 1,
+                      Content: "ini adalah status pertamaku di story six3",
+                      Image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      CreatedAt: 0001-01-01T00:00:00Z,
+                      UpdatedAt: 0001-01-01T00:00:00Z,
+                        user: 
+                        {
+                          ID: 23,
+                          Nama: "alex"
+                        }
+                    }
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed
+                  value: { code: 400, status: "failed", message: "bad request" }
     post:
       tags:
         - Post
@@ -256,14 +306,13 @@ paths:
               schema:
                 type: object
                 properties: 
-                  Title:
+                  Content:
                     type: string              
                   Image:
-                    type: integer
-                  Caption:
                     type: string
+                    format: binary
       responses:
-        '201':
+        '200':
             description: Success Response
             content:
               application/json:
@@ -274,13 +323,19 @@ paths:
                     description: response success 1
                     value:
                       {
-                        Title: "Hello!",
-                        Image: 0,
-                        Caption: "Good Morning!"
+                      ID: 1,
+                      Content: "ini adalah status pertamaku di story six3",
+                      Image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      CreatedAt: 0001-01-01T00:00:00Z,
+                      UpdatedAt: 0001-01-01T00:00:00Z,
+                        user: 
+                        {
+                          ID: 23,
+                          Nama: "alex"
+                        }
                       }
         '500':
           description: "Internal server error"
-  /post/update:
     put:
       tags:
         - Post
@@ -293,19 +348,34 @@ paths:
               schema:
                 type: object
                 properties: 
-                  Title:
-                    type: string                
+                  Content:
+                    type: string              
                   Image:
-                    type: integer
-                  Caption:
                     type: string
+                    format: binary
       responses:
-        "201":
+        "200":
             description: Success Response
             content:
               application/json:
                 schema:
-                  $ref: "#/components/schemas/successResponse"
+                  $ref: "#"
+                examples:
+                  response data:
+                    description: response success 1
+                    value:
+                      {
+                      ID: 1,
+                      Content: "ini adalah status pertamaku di story six3",
+                      Image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      CreatedAt: 0001-01-01T00:00:00Z,
+                      UpdatedAt: 0001-01-01T00:00:00Z,
+                        user: 
+                        {
+                          ID: 23,
+                          Nama: "alex"
+                        }
+                      }
         "400":
             description: Failed Response
             content:
@@ -320,8 +390,9 @@ paths:
                         code: 400,
                         status: "failed",
                         message: "Please make sure all fields are filled in correctly",
-                      }       
-  /post/delete:
+                      }
+        '500':
+          description: "Internal server error"  
     delete:
       tags:
         - Post
@@ -359,7 +430,7 @@ paths:
                   description: response failed 1
                   value: { code: 400, status: "failed", message: "Bad Request" }  
  
-  /comment:
+  /comments:
     get:
       tags:
         - Comment
@@ -367,22 +438,30 @@ paths:
       security:
         - JWTAuth: []
       responses:
-        "403":
-          description: forbidden
-        "404":
-          description: No data
         "200":
           description: Success Response
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/successResponse"
-                  examples:
+                $ref: "#"
+              examples:
+                response data:
                   description: response success
-                  value: { code: 200, status: "success", message: "success get data" }
-  /comment/create:
+                  value:
+                   {
+                      ID: 1,
+                      Comment: ini adalah komen pertamaku,
+                      CreatedAt: 0001-01-01T00:00:00Z,
+                      id_user: 2,
+                      Posting:
+                        {
+                        ID: 1,
+                        Content: "ini adalah status pertamaku di story six3",
+                        Image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                        }
+                    }
+        '500':
+          description: "Internal server error"
     post:
       tags:
         - Comment
@@ -398,21 +477,30 @@ paths:
                   comment:
                     type: string     
       responses:
-        '201':
-          description: "Comment successfully posted"
+        "200":
+          description: Success Response
           content:
             application/json:
               schema:
-               type: object
-               properties:
-                comment:
-                  type: string
-                created_at:
-                  type: string
-                  format: date-time          
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success
+                  value:
+                    {
+                      ID: 1,
+                      Comment: ini adalah komen pertamaku,
+                      CreatedAt: 0001-01-01T00:00:00Z,
+                      id_user: 2,
+                      Posting:
+                        {
+                        ID: 1,
+                        Content: "ini adalah status pertamaku di story six3",
+                        Image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                        }
+                    }
         '500':
           description: "Internal server error"
-  /comment/delete:
     delete:
       tags:
         - Comment
