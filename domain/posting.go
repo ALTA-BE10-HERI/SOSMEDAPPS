@@ -4,11 +4,11 @@ import "time"
 
 type Posting struct {
 	ID         int
-	ID_Users   int
 	Content    string
 	Image      string
 	Created_at time.Time
 	Deleted_at time.Time
+	ID_Users   int
 }
 
 type PostingUserCase interface {
