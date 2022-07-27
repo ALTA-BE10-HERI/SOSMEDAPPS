@@ -2,6 +2,7 @@ package data
 
 import (
 	"cleanarch/domain"
+	"errors"
 	"log"
 
 	"gorm.io/gorm"
@@ -37,4 +38,18 @@ func (pd *postingData) GetPosting() []domain.Posting {
 	}
 
 	return ParseToArrPosting(tmp)
+}
+
+// make query delete for this func
+func (pd *postingData) DeleteData(postingID int) (row int, err error) {
+	res := pd.db.Delete(&Posting{}, postingID)
+	if res.Error != nil {
+		log.Println("cannot delete data", res.Error.Error())
+		return 0, res.Error
+	}
+	if res.RowsAffected < 1 {
+		log.Println("no data deleted", res.Error.Error())
+		return 0, errors.New("dailed to data deleted")
+	}
+	return int(res.RowsAffected), nil
 }
