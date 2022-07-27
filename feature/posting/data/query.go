@@ -30,7 +30,7 @@ func (pd *postingData) Insert(newPosting domain.Posting) domain.Posting {
 
 func (pd *postingData) GetPosting() []domain.Posting {
 	var tmp []Posting
-	err := pd.db.Find(&tmp).Error
+	err := pd.db.Offset(10).Find(&tmp).Error
 	if err != nil {
 		log.Println("There is a problem with data", err.Error())
 		return nil
