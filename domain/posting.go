@@ -7,19 +7,25 @@ type Posting struct {
 	Content    string
 	Image      string
 	Created_at time.Time
-	Deleted_at time.Time
-	ID_Users   int
+	Updated_at time.Time
+	User       UserPosting
 }
 
-type PostingUserCase interface {
-	AddPosting(userID int, newPosting Posting) (Posting, error)
+type UserPosting struct {
+	ID   int
+	Nama string
+}
+type PostingUseCase interface {
+	// AddPosting(userID int, newPosting Posting) (Posting, error)
+	AddPosting(data Posting) (row int, err error)
 	GetAllPosting() ([]Posting, error)
 	DeleteCase(postingID int) (row int, err error)
 	// UpdateCase(updatePost Posting) (Posting, error)
 }
 
 type PostingData interface {
-	Insert(newPosting Posting) Posting
+	// Insert(newPosting Posting) Posting
+	InsertData(data Posting) (row int, err error)
 	GetPosting() []Posting
 	DeleteData(postingID int) (row int, err error)
 	// UpdatePost(updatePost Posting) Posting

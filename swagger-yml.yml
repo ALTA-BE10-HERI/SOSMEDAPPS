@@ -318,7 +318,6 @@ paths:
                       content: "ini adalah status pertamaku di story six3",
                       image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
                       createdat: 0001-01-01T00:00:00Z,
-                      updatedat: 0001-01-01T00:00:00Z,
                         user: 
                         {
                           id_user: 23,
