@@ -41,3 +41,14 @@ func (pu *postingUseCase) GetPostingById(id int) (data domain.Posting, err error
 	data, err = pu.postingData.SelectDataById(id)
 	return data, err
 }
+func (pu *postingUseCase) UpdateData(data domain.Posting, idPosting, idFromToken int) (row int, err error) {
+	reqData := map[string]interface{}{}
+	if data.Content != "" {
+		reqData["content"] = data.Content
+	}
+	if data.Image != "" {
+		reqData["image"] = data.Image
+	}
+	row, err = pu.postingData.UpdateData(reqData, idPosting, idFromToken)
+	return row, err
+}

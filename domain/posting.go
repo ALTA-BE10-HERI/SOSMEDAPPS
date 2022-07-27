@@ -22,6 +22,7 @@ type PostingUseCase interface {
 	GetAllPosting() ([]Posting, error)
 	DeleteCase(postingID int) (row int, err error)
 	GetPostingById(id int) (data Posting, err error)
+	UpdateData(data Posting, idPosting, idFromToken int) (row int, err error)
 }
 
 //kirim ke query
@@ -31,4 +32,5 @@ type PostingData interface {
 	GetPosting() []Posting
 	DeleteData(postingID int) (row int, err error)
 	SelectDataById(id int) (data Posting, err error)
+	UpdateData(data map[string]interface{}, idPosting, idFromToken int) (res int, err error)
 }

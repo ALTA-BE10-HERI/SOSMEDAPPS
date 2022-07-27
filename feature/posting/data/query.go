@@ -71,3 +71,24 @@ func (pd *postingData) DeleteData(postingID int) (row int, err error) {
 	}
 	return int(res.RowsAffected), nil
 }
+
+func (pd *postingData) UpdateData(data map[string]interface{}, idPosting, idFromToken int) (row int, err error) {
+	dataPosting := Posting{}
+	cekID := pd.db.First(&dataPosting, "id  = ?", idPosting)
+
+	if cekID.Error != nil {
+		return 0, cekID.Error
+	}
+	if dataPosting.UserID != idFromToken {
+		return -1, errors.New("you don`t have access")
+	}
+	res := pd.db.Model(&Posting{}).Where("id = ? ", idPosting).Updates(&data)
+	if res.Error != nil {
+		return 0, res.Error
+	}
+
+	if res.RowsAffected != 1 {
+		return 0, errors.New("failed update")
+	}
+	return int(res.RowsAffected), nil
+}
