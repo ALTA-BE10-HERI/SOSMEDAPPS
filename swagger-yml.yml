@@ -246,8 +246,8 @@ paths:
                 responseData1:
                   description: response failed 1
                   value: { code: 400, status: "failed", message: "bad request" }
-   
-  /posts:
+  
+  /posts/{id_post}:
     get:
       tags:
         - Post
@@ -285,53 +285,57 @@ paths:
                 responseData1:
                   description: response failed
                   value: { code: 400, status: "failed", message: "bad request" }
-    post:
+    delete:
       tags:
         - Post
-      description: fitur untuk membuat postingan
+      description: fitur menghapus postingan
       security:
         - JWTAuth: []
-      requestBody:
-        content:
-          multipart/form-data:
-              schema:
-                type: object
-                properties: 
-                  content:
-                    type: string              
-                  image:
-                    type: string
-                    format: binary
+      parameters:
+        - name: idpost
+          in: query
+          schema:
+            type: integer
+            example: 1
+          required: true
       responses:
-        '200':
-            description: Success Response
-            content:
-              application/json:
-                schema:
-                  $ref: "#"
-                examples:
-                  response data:
-                    description: response success 1
-                    value:
-                      {
-                      id: 1,
-                      content: "ini adalah status pertamaku di story six3",
-                      image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
-                      createdat: 0001-01-01T00:00:00Z,
-                        user: 
-                        {
-                          id_user: 23,
-                          nama: "alex"
-                        }
-                      }
-        '500':
-          description: "Internal server error"
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+              examples:
+                response data:
+                  description: response success 1
+                  value:
+                    code: 200
+                    status: "success"
+                    message: "successful operation"
+        "400":
+          description: Failed Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/failedResponse"
+              examples:
+                responseData1:
+                  description: response failed 1
+
+                  value: { code: 400, status: "failed", message: "bad request" }  
     put:
       tags:
         - Post
       description: fitur untuk mengupdate postingan user yang login
       security:
         - JWTAuth: []
+      parameters:
+        - name: idpost
+          in: query
+          schema:
+            type: integer
+            example: 1
+          required: true
       requestBody:
          content:
             multipart/form-data:
@@ -383,19 +387,11 @@ paths:
                       }
         '500':
           description: "Internal server error"  
-    delete:
+  /posts:
+    get:
       tags:
         - Post
-      description: fitur menghapus postingan
-      security:
-        - JWTAuth: []
-      parameters:
-        - name: idpost
-          in: query
-          schema:
-            type: integer
-            example: 1
-          required: true
+      description: fitur untuk melihat profil yang login
       responses:
         "200":
           description: Success Response
@@ -405,11 +401,20 @@ paths:
                 $ref: "#"
               examples:
                 response data:
-                  description: response success 1
+                  description: response success
                   value:
-                    code: 200
-                    status: "success"
-                    message: "successful operation"
+                    {
+                      id: 1,
+                      content: "ini adalah status pertamaku di story six3",
+                      image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      createdat: 0001-01-01T00:00:00Z,
+                      updatedat: 0001-01-01T00:00:00Z,
+                        user: 
+                        {
+                          id_user: 23,
+                          nama: "alex"
+                        }
+                    }
         "400":
           description: Failed Response
           content:
@@ -418,9 +423,58 @@ paths:
                 $ref: "#/components/schemas/failedResponse"
               examples:
                 responseData1:
-                  description: response failed 1
+                  description: response failed
+                  value: { code: 400, status: "failed", message: "bad request" }
+    post:
+      tags:
+        - Post
+      description: fitur untuk membuat postingan
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: idpost
+          in: query
+          schema:
+            type: integer
+            example: 1
+          required: true
+      requestBody:
+        content:
+          multipart/form-data:
+              schema:
+                type: object
+                properties: 
+                  content:
+                    type: string              
+                  image:
+                    type: string
+                    format: binary
+      responses:
+        '200':
+            description: Success Response
+            content:
+              application/json:
+                schema:
+                  $ref: "#"
+                examples:
+                  response data:
+                    description: response success 1
+                    value:
+                      {
+                      id: 1,
+                      content: "ini adalah status pertamaku di story six3",
+                      image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      createdat: 0001-01-01T00:00:00Z,
+                        user: 
+                        {
+                          id_user: 23,
+                          nama: "alex"
+                        }
+                      }
+        '500':
+          description: "Internal server error"
 
-                  value: { code: 400, status: "failed", message: "bad request" }  
+
  
   
   /comments/{id_posting}:
