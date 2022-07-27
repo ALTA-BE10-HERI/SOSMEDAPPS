@@ -18,7 +18,16 @@ func New(db *gorm.DB) domain.PostingData {
 	}
 }
 
-func (pd *postingData) GetDetailPosting(idPosting int) (result domain.Posting, err error) {
+func (pd *postingData) SelectDataById(id int) (data domain.Posting, err error) {
+	tmp := Posting{}
+	res := pd.db.Preload("User").Find(&tmp, id)
+	if res.Error != nil {
+		return domain.Posting{}, res.Error
+	}
+	return tmp.ToDomain(), nil
+}
+
+func (pd *postingData) GetUser(idPosting int) (result domain.Posting, err error) {
 	var tmp Posting
 	res := pd.db.Preload("User").Where("id = ?", idPosting).First(&tmp)
 	if res.Error != nil {
@@ -59,6 +68,27 @@ func (pd *postingData) DeleteData(postingID int) (row int, err error) {
 	if res.RowsAffected < 1 {
 		log.Println("no data deleted", res.Error.Error())
 		return 0, errors.New("dailed to data deleted")
+	}
+	return int(res.RowsAffected), nil
+}
+
+func (pd *postingData) UpdateData(data map[string]interface{}, idPosting, idFromToken int) (row int, err error) {
+	dataPosting := Posting{}
+	cekID := pd.db.First(&dataPosting, "id  = ?", idPosting)
+
+	if cekID.Error != nil {
+		return 0, cekID.Error
+	}
+	if dataPosting.UserID != idFromToken {
+		return -1, errors.New("you don`t have access")
+	}
+	res := pd.db.Model(&Posting{}).Where("id = ? ", idPosting).Updates(&data)
+	if res.Error != nil {
+		return 0, res.Error
+	}
+
+	if res.RowsAffected != 1 {
+		return 0, errors.New("failed update")
 	}
 	return int(res.RowsAffected), nil
 }

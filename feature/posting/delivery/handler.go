@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -23,6 +24,8 @@ func New(e *echo.Echo, ps domain.PostingUseCase) {
 	e.POST("post", handler.InsertPosting(), _middleware.JWTMiddleware())
 	e.GET("/post", handler.GetAllPosting())
 	e.DELETE("/post/:id", handler.DeleteData(), _middleware.JWTMiddleware())
+	e.GET("/post/:id", handler.GetById())
+	e.PUT("/post/:id", handler.Update(), _middleware.JWTMiddleware())
 }
 
 func (ph *postingHandler) InsertPosting() echo.HandlerFunc {
@@ -77,5 +80,43 @@ func (ph *postingHandler) DeleteData() echo.HandlerFunc {
 			return c.JSON(http.StatusNotFound, _helper.ResponseFailed("data not found"))
 		}
 		return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success delete data"))
+	}
+}
+
+func (ph *postingHandler) GetById() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := c.Param("id")
+		idPosting, _ := strconv.Atoi(id)
+		res, err := ph.postingUsercase.GetPostingById(idPosting)
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to get detail posting"))
+		}
+		return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success ", FromModel(res)))
+	}
+
+}
+
+func (ph *postingHandler) Update() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := c.Param("id")
+		idPosting, _ := strconv.Atoi(id)
+		idFromToken, _ := _middleware.ExtractData(c)
+		content := c.FormValue("content")
+		images := c.FormValue("image")
+		postReq := InsertFormat{
+			Content: content,
+			Image:   images,
+		}
+
+		dataPost := postReq.ToModel()
+		row, errUpd := ph.postingUsercase.UpdateData(dataPost, idPosting, idFromToken)
+		if errUpd != nil {
+			return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("you dont have access"))
+		}
+		if row == 0 {
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("failed to update data"))
+		}
+		return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success"))
 	}
 }
