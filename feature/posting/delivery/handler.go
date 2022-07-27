@@ -4,6 +4,7 @@ import (
 	"cleanarch/domain"
 	_middleware "cleanarch/feature/common"
 	_helper "cleanarch/helper"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -36,14 +37,13 @@ func (ph *postingHandler) InsertPosting() echo.HandlerFunc {
 		}
 
 		dataPosting := tmp.ToModel()
-		row, errCreate := ph.postingUsercase.AddPosting(dataPosting)
-		if row != 0 {
-			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("filled in correctly"))
-		}
+		result, errCreate := ph.postingUsercase.AddPosting(dataPosting)
 		if errCreate != nil {
 			return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to create posting"))
 		}
-		return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", dataPosting))
+		fmt.Println(result)
+		return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", FromModel(result)))
+
 	}
 }
 

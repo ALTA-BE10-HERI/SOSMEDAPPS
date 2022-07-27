@@ -17,15 +17,15 @@ type UserPosting struct {
 }
 type PostingUseCase interface {
 	// AddPosting(userID int, newPosting Posting) (Posting, error)
-	AddPosting(data Posting) (row int, err error)
+	AddPosting(data Posting) (result Posting, err error)
 	GetAllPosting() ([]Posting, error)
 	DeleteCase(postingID int) (row int, err error)
 	// UpdateCase(updatePost Posting) (Posting, error)
 }
 
 type PostingData interface {
-	// Insert(newPosting Posting) Posting
-	InsertData(data Posting) (row int, err error)
+	GetDetailPosting(idPosting int) (result Posting, err error)
+	InsertData(data Posting) (result Posting, err error)
 	GetPosting() []Posting
 	DeleteData(postingID int) (row int, err error)
 	// UpdatePost(updatePost Posting) Posting
