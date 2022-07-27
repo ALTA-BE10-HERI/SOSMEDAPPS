@@ -2,26 +2,24 @@ package data
 
 import (
 	"cleanarch/domain"
-	"time"
 
 	"gorm.io/gorm"
 )
 
 type Posting struct {
-	ID        uint   `gorm:"primarykey"`
-	Content   string `json:"content" form:"content"`
-	Image     string `json:"image" form:"image"`
-	UserID    int
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
-	Users     User           `gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	gorm.Model
+	Content string `json:"content" form:"content"`
+	Image   string `json:"image" form:"image"`
+	UserID  int
+	User    User `gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 }
 
 type User struct {
 	gorm.Model
-	Nama    string
-	Posting []Posting
+	Nama     string
+	Email    string `gorm:"unique"`
+	Password string
+	Posting  []Posting `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 func (p *Posting) ToDomain() domain.Posting {
@@ -30,9 +28,9 @@ func (p *Posting) ToDomain() domain.Posting {
 		Content:    p.Content,
 		Image:      p.Image,
 		Created_at: p.CreatedAt,
-		User: domain.User{
+		User: domain.UserPosting{
 			ID:   int(p.UserID),
-			Nama: p.Users.Nama,
+			Nama: p.User.Nama,
 		},
 	}
 }
@@ -50,6 +48,6 @@ func FromDomain(data domain.Posting) Posting {
 	var res Posting
 	res.Content = data.Content
 	res.Image = data.Image
-	res.UserID = data.ID_Users
+	res.UserID = data.User.ID
 	return res
 }

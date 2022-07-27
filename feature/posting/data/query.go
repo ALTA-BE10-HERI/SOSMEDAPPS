@@ -19,16 +19,11 @@ func New(db *gorm.DB) domain.PostingData {
 }
 
 func (pd *postingData) InsertData(newPosting domain.Posting) (row int, err error) {
-	// var cnv = FromDomain(newPosting)
-	// err := pd.db.Create(&cnv).Error
-	// if err != nil {
-	// 	log.Println("cannot create object", err.Error())
-	// 	return domain.Posting{}
-	// }
-
-	// return cnv.ToDomain()
 	posting := FromDomain(newPosting)
 	res := pd.db.Create(&posting)
+	if res.Error == nil {
+		return 0, res.Error
+	}
 	if res.Error != nil {
 		return 0, res.Error
 	}

@@ -7,16 +7,14 @@ type Posting struct {
 	Content    string
 	Image      string
 	Created_at time.Time
-	Deleted_at time.Time
-	ID_Users   int
-	User       User
+	Updated_at time.Time
+	User       UserPosting
 }
 
 type UserPosting struct {
 	ID   int
-	Name string
+	Nama string
 }
-
 type PostingUseCase interface {
 	// AddPosting(userID int, newPosting Posting) (Posting, error)
 	AddPosting(data Posting) (row int, err error)
