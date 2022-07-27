@@ -22,7 +22,7 @@ func New(e *echo.Echo, ps domain.PostingUseCase) {
 
 	e.POST("post", handler.InsertPosting(), _middleware.JWTMiddleware())
 	e.GET("/post", handler.GetAllPosting())
-	e.DELETE("/post", handler.DeleteData(), _middleware.JWTMiddleware())
+	e.DELETE("/post/:id", handler.DeleteData(), _middleware.JWTMiddleware())
 }
 
 func (ph *postingHandler) InsertPosting() echo.HandlerFunc {
