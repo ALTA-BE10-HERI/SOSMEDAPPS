@@ -2,7 +2,7 @@ openapi: 3.0.0
 servers:
   # Added by API Auto Mocking Plugin
   - description: Server real
-    url: 0.0.0.0
+    url: https://myminefield.site/
   - description: SwaggerHub API Auto Mocking
     url: https://app.swaggerhub.com/apis/DianNurdiana-alt/story-six_3/1.0.0
 info:
