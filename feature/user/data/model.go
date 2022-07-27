@@ -2,7 +2,8 @@ package data
 
 import (
 	"cleanarch/domain"
-	"cleanarch/feature/posting/data"
+	datacomment "cleanarch/feature/comment/data"
+	dataposting "cleanarch/feature/posting/data"
 
 	"gorm.io/gorm"
 )
@@ -12,7 +13,8 @@ type User struct {
 	Nama     string
 	Email    string `gorm:"unique" validate:"required,email"`
 	Password string
-	Posting  []data.Posting `gorm:"foreignKey:ID_Users"` // masih belum yakin
+	Posting  []dataposting.Posting `gorm:"foreignKey:ID_Users"`
+	Comment  []datacomment.Comment `gorm:"foreignKey:ID_Users"`
 }
 
 func (u *User) ToModel() domain.User {

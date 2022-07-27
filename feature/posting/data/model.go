@@ -2,6 +2,7 @@ package data
 
 import (
 	"cleanarch/domain"
+	"cleanarch/feature/comment/data"
 
 	"gorm.io/gorm"
 )
@@ -9,8 +10,9 @@ import (
 type Posting struct {
 	gorm.Model
 	ID_Users int
-	Content  string `json:"content" form:"content"`
-	Image    string `json:"image" form:"image"`
+	Content  string         `json:"content" form:"content"`
+	Image    string         `json:"image" form:"image"`
+	Comment  []data.Comment `gorm:"foreignKey:ID_Posting"`
 }
 
 func (p *Posting) ToDomain() domain.Posting {
