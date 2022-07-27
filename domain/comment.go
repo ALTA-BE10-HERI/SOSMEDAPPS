@@ -8,6 +8,7 @@ type Comment struct {
 	ID         int
 	Comment    string
 	Created_at time.Time
+	Deleted_at time.Time
 	ID_Users   int
 	ID_Posting int
 }

@@ -11,7 +11,8 @@ type User struct {
 	Nama     string
 	Email    string `gorm:"unique"`
 	Password string
-}
+	Posting  []dataposting.Posting `gorm:"foreignKey:ID_Users"`
+	Comment  []datacomment.Comment `gorm:"foreignKey:ID_Users"`
 
 func (u *User) ToModel() domain.User {
 	return domain.User{

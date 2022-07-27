@@ -42,7 +42,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/responseLoginSuccess"
               examples:
-                responseData1:
+                responseData:
                   description: response success 1
                   value:
                     {
@@ -187,10 +187,10 @@ paths:
                   $ref: "#/components/schemas/successResponse"
                 examples:
                   responseData1:
-                    description: response success
+                    description: response success 1
                     value:
                       {
-                        code: 201,
+                        code: 200,
                         status: "success",
                         message: "successfully updated data",
                       }
@@ -405,6 +405,7 @@ paths:
                 $ref: "#"
               examples:
                 response data:
+                  description: response success 1
                   value:
                     code: 200
                     status: "success"
@@ -418,7 +419,10 @@ paths:
               examples:
                 responseData1:
                   description: response failed 1
-                  value: { code: 400, status: "failed", message: "Bad Request" }  
+
+                  value: { code: 400, status: "failed", message: "bad request" }  
+ 
+  
   /comments/{id_posting}:
     get:
       tags:

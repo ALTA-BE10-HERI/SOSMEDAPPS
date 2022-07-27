@@ -2,24 +2,24 @@ package data
 
 import (
 	"cleanarch/domain"
-	"time"
+
+	"gorm.io/gorm"
 )
 
 type Comment struct {
-	ID         int       `json:"id" form:"id" gorm:"primaryKey;autoIncrement"`
-	Comment    string    `json:"comment" form:"comment"`
-	Created_at time.Time `gorm:"autoCreateTime"`
+	gorm.Model
 	ID_Users   int
 	ID_Posting int
+	Comment    string `json:"comment" form:"comment"`
 }
 
 func (c *Comment) ToDomain() domain.Comment {
 	return domain.Comment{
-		ID:         c.ID,
-		Comment:    c.Comment,
-		Created_at: c.Created_at,
+		ID:         int(c.ID),
 		ID_Users:   c.ID_Users,
 		ID_Posting: c.ID_Posting,
+		Comment:    c.Comment,
+		Created_at: c.CreatedAt,
 	}
 }
 
@@ -34,11 +34,8 @@ func ParseToArrComment(arr []Comment) []domain.Comment {
 
 func FromDomain(data domain.Comment) Comment {
 	var res Comment
-	res.ID = data.ID
-	res.Comment = data.Comment
-	res.Created_at = data.Created_at
 	res.ID_Users = data.ID_Users
 	res.ID_Posting = data.ID_Posting
-
+	res.Comment = data.Comment
 	return res
 }
