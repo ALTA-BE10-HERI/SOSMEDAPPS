@@ -430,6 +430,13 @@ paths:
       description: fitur menampilkan semua komentar
       security:
         - JWTAuth: []
+      parameters:
+        - in: path
+          name: id_posting
+          required: true
+          schema:
+            type: integer
+            example: 1
       responses:
         "200":
           description: Success Response
@@ -461,6 +468,13 @@ paths:
       description: fitur untuk menambahkan komentar
       security:
         - JWTAuth: []
+      parameters:
+        - in: path
+          name: id_posting
+          required: true
+          schema:
+            type: integer
+            example: 1
       requestBody:
           content:
             application/json:

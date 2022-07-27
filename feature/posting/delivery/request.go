@@ -9,7 +9,7 @@ import (
 type InsertFormat struct {
 	gorm.Model
 	Content  string `json:"content" form:"content"`
-	Image    string `json:"image" form:"content"`
+	Image    string `json:"image" form:"image"`
 	ID_Users int
 }
 

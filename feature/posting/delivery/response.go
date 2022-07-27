@@ -8,7 +8,7 @@ type Posting struct {
 	ID      int    `json:"id"`
 	Content string `json:"content"`
 	Image   string `json:"image"`
-	User    User
+	User    User   `json:"user"`
 }
 
 type User struct {

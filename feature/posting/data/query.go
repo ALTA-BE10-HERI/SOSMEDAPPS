@@ -18,19 +18,25 @@ func New(db *gorm.DB) domain.PostingData {
 	}
 }
 
-func (pd *postingData) InsertData(newPosting domain.Posting) (row int, err error) {
+func (pd *postingData) GetDetailPosting(idPosting int) (result domain.Posting, err error) {
+	var tmp Posting
+	res := pd.db.Preload("User").Where("id = ?", idPosting).First(&tmp)
+	if res.Error != nil {
+		return domain.Posting{}, res.Error
+	}
+	return tmp.ToDomain(), nil
+}
+
+func (pd *postingData) InsertData(newPosting domain.Posting) (result domain.Posting, err error) {
 	posting := FromDomain(newPosting)
 	res := pd.db.Create(&posting)
-	if res.Error == nil {
-		return 0, res.Error
-	}
 	if res.Error != nil {
-		return 0, res.Error
+		return domain.Posting{}, res.Error
 	}
 	if res.RowsAffected != 1 {
-		return 0, errors.New("failed to insert data")
+		return domain.Posting{}, errors.New("failed to insert data")
 	}
-	return int(res.RowsAffected), err
+	return posting.ToDomain(), err
 }
 
 func (pd *postingData) GetPosting() []domain.Posting {

@@ -15,9 +15,10 @@ func New(pd domain.PostingData) domain.PostingUseCase {
 	}
 }
 
-func (pd *postingUseCase) AddPosting(data domain.Posting) (row int, err error) {
-	row, err = pd.postingData.InsertData(data)
-	return row, err
+func (pd *postingUseCase) AddPosting(data domain.Posting) (result domain.Posting, err error) {
+	result, err = pd.postingData.InsertData(data)
+	resultGet, _ := pd.postingData.GetDetailPosting(result.ID)
+	return resultGet, err
 }
 
 func (pu *postingUseCase) GetAllPosting() ([]domain.Posting, error) {
