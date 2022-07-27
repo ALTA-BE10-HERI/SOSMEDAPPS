@@ -11,41 +11,39 @@ import (
 )
 
 type postingHandler struct {
-	postingUsercase domain.PostingUserCase
+	postingUsercase domain.PostingUseCase
 }
 
-func New(e *echo.Echo, ps domain.PostingUserCase) {
+func New(e *echo.Echo, ps domain.PostingUseCase) {
 	handler := &postingHandler{
 		postingUsercase: ps,
 	}
 
-	e.POST("user/posting", handler.InsertPosting(), _middleware.JWTMiddleware())
-	e.GET("/homepage", handler.GetAllPosting())
-	e.DELETE("/posting/delete", handler.DeleteData(), _middleware.JWTMiddleware())
+	e.POST("post", handler.InsertPosting(), _middleware.JWTMiddleware())
+	e.GET("/post", handler.GetAllPosting())
+	e.DELETE("/post", handler.DeleteData(), _middleware.JWTMiddleware())
 }
 
 func (ph *postingHandler) InsertPosting() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id, _ := _middleware.ExtractData(c)
 		var tmp InsertFormat
+		idFromToken, _ := _middleware.ExtractData(c)
 		err := c.Bind(&tmp)
+		tmp.ID_Users = idFromToken
 
 		if err != nil {
-			log.Println("cannot parse data", err)
-			c.JSON(http.StatusBadRequest, "error read input")
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("failed to bind data"))
 		}
 
-		data, err := ph.postingUsercase.AddPosting(id, tmp.ToModel())
-
-		if err != nil {
-			log.Println("cannot proces data", err)
-			c.JSON(http.StatusInternalServerError, err)
+		dataPosting := tmp.ToModel()
+		row, errCreate := ph.postingUsercase.AddPosting(dataPosting)
+		if row != 0 {
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("filled in correctly"))
 		}
-
-		return c.JSON(http.StatusCreated, map[string]interface{}{
-			"message": "success create data",
-			"data":    data,
-		})
+		if errCreate != nil {
+			return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to create posting"))
+		}
+		return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", dataPosting))
 	}
 }
 
