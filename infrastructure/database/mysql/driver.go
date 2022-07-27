@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 
-
 	commentData "cleanarch/feature/comment/data"
 
 	postingData "cleanarch/feature/posting/data"
@@ -32,8 +31,6 @@ func InitDB(cfg *config.AppConfig) *gorm.DB {
 }
 func MigrateData(db *gorm.DB) {
 
-	db.AutoMigrate(userData.User{}, commentData.Comment{})
-
-	db.AutoMigrate(userData.User{}, postingData.Posting{})
+	db.AutoMigrate(userData.User{}, postingData.Posting{}, commentData.Comment{})
 
 }

@@ -14,8 +14,8 @@ type Posting struct {
 type PostingUserCase interface {
 	AddPosting(userID int, newPosting Posting) (Posting, error)
 	GetAllPosting() ([]Posting, error)
-	// UpdateCase(updatePost Posting) (Posting, error)
 	// DeleteCase(ID int) error
+	// UpdateCase(updatePost Posting) (Posting, error)
 }
 
 type PostingData interface {
