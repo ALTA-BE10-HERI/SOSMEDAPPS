@@ -3,6 +3,7 @@ package delivery
 import (
 	"cleanarch/domain"
 	_middleware "cleanarch/feature/common"
+	_helper "cleanarch/helper"
 	"log"
 	"net/http"
 
@@ -60,5 +61,22 @@ func (ph *postingHandler) GetAllPosting() echo.HandlerFunc {
 			"message": "success get data",
 			"data":    data,
 		})
+	}
+}
+
+func (ph *postingHandler) DeleteData() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id, _ := _middleware.ExtractData(c)
+		if id == 0 {
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("error read input"))
+		}
+		row, errDel := ph.postingUsercase.DeleteCase(id)
+		if errDel != nil {
+			return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to delete data"))
+		}
+		if row == 0 {
+			return c.JSON(http.StatusNotFound, _helper.ResponseFailed("data not found"))
+		}
+		return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success delete data"))
 	}
 }
