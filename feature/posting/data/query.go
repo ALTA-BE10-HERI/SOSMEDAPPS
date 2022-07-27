@@ -40,7 +40,6 @@ func (pd *postingData) GetPosting() []domain.Posting {
 	return ParseToArrPosting(tmp)
 }
 
-// make query delete for this func
 func (pd *postingData) DeleteData(postingID int) (row int, err error) {
 	res := pd.db.Delete(&Posting{}, postingID)
 	if res.Error != nil {
