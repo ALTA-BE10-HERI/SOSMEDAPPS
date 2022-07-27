@@ -21,6 +21,7 @@ func New(e *echo.Echo, ps domain.PostingUserCase) {
 
 	e.POST("user/posting", handler.InsertPosting(), _middleware.JWTMiddleware())
 	e.GET("/homepage", handler.GetAllPosting())
+	e.DELETE("/posting/delete", handler.DeleteData(), _middleware.JWTMiddleware())
 }
 
 func (ph *postingHandler) InsertPosting() echo.HandlerFunc {
