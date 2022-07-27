@@ -14,13 +14,13 @@ type Posting struct {
 type PostingUserCase interface {
 	AddPosting(userID int, newPosting Posting) (Posting, error)
 	GetAllPosting() ([]Posting, error)
+	DeleteCase(postingID int) (row int, err error)
 	// UpdateCase(updatePost Posting) (Posting, error)
-	// DeleteCase(ID int) error
 }
 
 type PostingData interface {
 	Insert(newPosting Posting) Posting
 	GetPosting() []Posting
+	DeleteData(postingID int) (row int, err error)
 	// UpdatePost(updatePost Posting) Posting
-	// DeletePost(ID int) error
 }

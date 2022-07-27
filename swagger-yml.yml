@@ -48,7 +48,7 @@ paths:
                     {
                       code: 200,
                       status: "success",
-                      message: "Login Success",
+                      message: "login success",
                       data:
                         {
                           name: "alex",
@@ -101,12 +101,12 @@ paths:
                       message: "success operation create data",
                       data:
                         {
-                          ID: 39,
-                          Nama: "alex",
-                          Email: "alexalttera@mail.com",
-                          Password: "$2a$10$Kj32oCSvB/ifssRWZinbE..3DurySB2kIeL5FY2BOMLsPSo90n2s2",
-                          CreatedAt: "2022-07-26T10:43:46.656+07:00",
-                          UpdatedAt: "2022-07-26T10:43:46.656+07:00"
+                          id: 39,
+                          nama: "alex",
+                          email: "alexalttera@mail.com",
+                          password: "$2a$10$Kj32oCSvB/ifssRWZinbE..3DurySB2kIeL5FY2BOMLsPSo90n2s2",
+                          createdat: "2022-07-26T10:43:46.656+07:00",
+                          updatedat: "2022-07-26T10:43:46.656+07:00"
                         }
                     }
         "400":
@@ -143,13 +143,12 @@ paths:
                   description: response success 1
                   value:
                     {
-                      ID: 1,
-                      Nama: "alex",
-                      Email: "alex@gmail.com",
-                      Password: "$2a$10$Kj32oCSvB/ifssRWZinbE..3DurySB2kIeL5FY2BOMLsPSo90n2s2",
-                      CreatedAt: 2022-07-26T03:43:46.656Z,
-                      UpdatedAt: 2022-07-26T03:43:46.656Z
-
+                      id: 1,
+                      nama: "alex",
+                      email: "alex@gmail.com",
+                      password: "$2a$10$Kj32oCSvB/ifssRWZinbE..3DurySB2kIeL5FY2BOMLsPSo90n2s2",
+                      createdat: 2022-07-26T03:43:46.656Z,
+                      updatedat: 2022-07-26T03:43:46.656Z
                     }
         "400":
           description: Failed Response
@@ -169,25 +168,15 @@ paths:
         - JWTAuth: []
       requestBody:
          content:
-            aplication/json:
-              schema:
-                type: object
-                properties:                 
-                  New Nama:
-                    type: string
-                  New Email:
-                    type: string
-                  New Password:
-                    type: string
             multipart/formdata:
               schema:
                 type: object
                 properties:                 
-                  New Nama:
+                  new nama:
                     type: string
-                  New Email:
+                  new email:
                     type: string
-                  New Password:
+                  new password:
                     type: string
       responses:
          "200":
@@ -213,13 +202,15 @@ paths:
                   $ref: "#/components/schemas/failedResponse"
                 examples:
                   responseData1:
-                    description: response failed 1
+                    description: response failed
                     value:
                       {
                         code: 400,
                         status: "failed",
-                        message: "Please make sure all fields are filled in correctly",
-                      }  
+                        message: "please make sure all fields are filled in correctly",
+                      } 
+         "500":
+            description: "server internal error"
     delete:
       tags:
         - Users
@@ -273,15 +264,15 @@ paths:
                   description: response success
                   value:
                     {
-                      ID: 1,
-                      Content: "ini adalah status pertamaku di story six3",
-                      Image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
-                      CreatedAt: 0001-01-01T00:00:00Z,
-                      UpdatedAt: 0001-01-01T00:00:00Z,
+                      id: 1,
+                      content: "ini adalah status pertamaku di story six3",
+                      image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      createdat: 0001-01-01T00:00:00Z,
+                      updatedat: 0001-01-01T00:00:00Z,
                         user: 
                         {
-                          ID: 23,
-                          Nama: "alex"
+                          id_user: 23,
+                          nama: "alex"
                         }
                     }
         "400":
@@ -306,9 +297,9 @@ paths:
               schema:
                 type: object
                 properties: 
-                  Content:
+                  content:
                     type: string              
-                  Image:
+                  image:
                     type: string
                     format: binary
       responses:
@@ -323,15 +314,15 @@ paths:
                     description: response success 1
                     value:
                       {
-                      ID: 1,
-                      Content: "ini adalah status pertamaku di story six3",
-                      Image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
-                      CreatedAt: 0001-01-01T00:00:00Z,
-                      UpdatedAt: 0001-01-01T00:00:00Z,
+                      id: 1,
+                      content: "ini adalah status pertamaku di story six3",
+                      image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      createdat: 0001-01-01T00:00:00Z,
+                      updatedat: 0001-01-01T00:00:00Z,
                         user: 
                         {
-                          ID: 23,
-                          Nama: "alex"
+                          id_user: 23,
+                          nama: "alex"
                         }
                       }
         '500':
@@ -348,9 +339,9 @@ paths:
               schema:
                 type: object
                 properties: 
-                  Content:
+                  content:
                     type: string              
-                  Image:
+                  image:
                     type: string
                     format: binary
       responses:
@@ -365,15 +356,15 @@ paths:
                     description: response success 1
                     value:
                       {
-                      ID: 1,
-                      Content: "ini adalah status pertamaku di story six3",
-                      Image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
-                      CreatedAt: 0001-01-01T00:00:00Z,
-                      UpdatedAt: 0001-01-01T00:00:00Z,
+                      id: 1,
+                      content: "ini adalah status pertamaku di story six3",
+                      image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                      createdat: 0001-01-01T00:00:00Z,
+                      updatedat: 0001-01-01T00:00:00Z,
                         user: 
                         {
-                          ID: 23,
-                          Nama: "alex"
+                          id_user: 23,
+                          nama: "alex"
                         }
                       }
         "400":
@@ -389,7 +380,7 @@ paths:
                       {
                         code: 400,
                         status: "failed",
-                        message: "Please make sure all fields are filled in correctly",
+                        message: "request error",
                       }
         '500':
           description: "Internal server error"  
@@ -429,9 +420,11 @@ paths:
               examples:
                 responseData1:
                   description: response failed 1
+
                   value: { code: 400, status: "failed", message: "bad request" }  
  
-  /comments:
+  
+  /comments/{id_posting}:
     get:
       tags:
         - Comment
@@ -450,15 +443,15 @@ paths:
                   description: response success
                   value:
                    {
-                      ID: 1,
-                      Comment: ini adalah komen pertamaku,
-                      CreatedAt: 0001-01-01T00:00:00Z,
+                      id: 1,
+                      comment: ini adalah komen pertamaku,
+                      createdat: 0001-01-01T00:00:00Z,
                       id_user: 2,
-                      Posting:
+                      posting:
                         {
-                        ID: 1,
-                        Content: "ini adalah status pertamaku di story six3",
-                        Image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                        id_posting: 1,
+                        content: "ini adalah status pertamaku di story six3",
+                        image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
                         }
                     }
         '500':
@@ -489,19 +482,21 @@ paths:
                   description: response success
                   value:
                     {
-                      ID: 1,
-                      Comment: ini adalah komen pertamaku,
-                      CreatedAt: 0001-01-01T00:00:00Z,
+                      id: 1,
+                      comment: ini adalah komen pertamaku,
+                      createdat: 0001-01-01T00:00:00Z,
                       id_user: 2,
-                      Posting:
+                      posting:
                         {
-                        ID: 1,
-                        Content: "ini adalah status pertamaku di story six3",
-                        Image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                        id_posting: 1,
+                        content: "ini adalah status pertamaku di story six3",
+                        image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
                         }
                     }
         '500':
           description: "Internal server error"
+  /comments:
+
     delete:
       tags:
         - Comment

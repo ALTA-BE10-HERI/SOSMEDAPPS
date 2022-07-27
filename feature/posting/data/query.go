@@ -2,6 +2,7 @@ package data
 
 import (
 	"cleanarch/domain"
+	"errors"
 	"log"
 
 	"gorm.io/gorm"
@@ -30,11 +31,24 @@ func (pd *postingData) Insert(newPosting domain.Posting) domain.Posting {
 
 func (pd *postingData) GetPosting() []domain.Posting {
 	var tmp []Posting
-	err := pd.db.Find(&tmp).Error
+	err := pd.db.Limit(10).Find(&tmp).Error
 	if err != nil {
 		log.Println("There is a problem with data", err.Error())
 		return nil
 	}
 
 	return ParseToArrPosting(tmp)
+}
+
+func (pd *postingData) DeleteData(postingID int) (row int, err error) {
+	res := pd.db.Delete(&Posting{}, postingID)
+	if res.Error != nil {
+		log.Println("cannot delete data", res.Error.Error())
+		return 0, res.Error
+	}
+	if res.RowsAffected < 1 {
+		log.Println("no data deleted", res.Error.Error())
+		return 0, errors.New("dailed to data deleted")
+	}
+	return int(res.RowsAffected), nil
 }

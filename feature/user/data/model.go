@@ -13,6 +13,7 @@ type User struct {
 	Nama     string
 	Email    string `gorm:"unique" validate:"required,email"`
 	Password string
+
 	Posting  []dataposting.Posting `gorm:"foreignKey:ID_Users"`
 	Comment  []datacomment.Comment `gorm:"foreignKey:ID_Users"`
 }
