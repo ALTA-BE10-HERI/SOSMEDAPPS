@@ -9,17 +9,26 @@ type postingUseCase struct {
 	postingData domain.PostingData
 }
 
-func New(pd domain.PostingData) domain.PostingUserCase {
+func New(pd domain.PostingData) domain.PostingUseCase {
 	return &postingUseCase{
 		postingData: pd,
 	}
 }
 
-func (pu *postingUseCase) AddPosting(userID int, newPosting domain.Posting) (domain.Posting, error) {
-	if newPosting.ID_Users == 0 {
-		return domain.Posting{}, errors.New("userID is empty")
+// func (pu *postingUseCase) AddPosting(userID int, newPosting domain.Posting) (domain.Posting, error) {
+// 	if newPosting.ID_Users == 0 {
+// 		return domain.Posting{}, errors.New("userID is empty")
+// 	}
+// 	return pu.postingData.Insert(newPosting), nil
+// }
+
+func (pd *postingUseCase) AddPosting(data domain.Posting) (row int, err error) {
+	if data.Content == "" && data.Image == "" {
+		return -1, errors.New("please make sure all fields are filled in correctly")
 	}
-	return pu.postingData.Insert(newPosting), nil
+	row, err = pd.postingData.InsertData(data)
+	return row, err
+
 }
 
 func (pu *postingUseCase) GetAllPosting() ([]domain.Posting, error) {

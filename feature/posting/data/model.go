@@ -2,26 +2,38 @@ package data
 
 import (
 	"cleanarch/domain"
-	"cleanarch/feature/comment/data"
+	"time"
 
 	"gorm.io/gorm"
 )
 
 type Posting struct {
+	ID        uint   `gorm:"primarykey"`
+	Content   string `json:"content" form:"content"`
+	Image     string `json:"image" form:"image"`
+	UserID    int
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Users     User           `gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+}
+
+type User struct {
 	gorm.Model
-	ID_Users int
-	Content  string         `json:"content" form:"content"`
-	Image    string         `json:"image" form:"image"`
-	Comment  []data.Comment `gorm:"foreignKey:ID_Posting"`
+	Nama    string
+	Posting []Posting
 }
 
 func (p *Posting) ToDomain() domain.Posting {
 	return domain.Posting{
 		ID:         int(p.ID),
-		ID_Users:   p.ID_Users,
 		Content:    p.Content,
 		Image:      p.Image,
 		Created_at: p.CreatedAt,
+		User: domain.User{
+			ID:   int(p.UserID),
+			Nama: p.Users.Nama,
+		},
 	}
 }
 
@@ -36,8 +48,8 @@ func ParseToArrPosting(arr []Posting) []domain.Posting {
 
 func FromDomain(data domain.Posting) Posting {
 	var res Posting
-	res.ID_Users = data.ID_Users
 	res.Content = data.Content
 	res.Image = data.Image
+	res.UserID = data.ID_Users
 	return res
 }

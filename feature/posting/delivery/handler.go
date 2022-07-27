@@ -11,10 +11,10 @@ import (
 )
 
 type postingHandler struct {
-	postingUsercase domain.PostingUserCase
+	postingUsercase domain.PostingUseCase
 }
 
-func New(e *echo.Echo, ps domain.PostingUserCase) {
+func New(e *echo.Echo, ps domain.PostingUseCase) {
 	handler := &postingHandler{
 		postingUsercase: ps,
 	}
@@ -24,28 +24,51 @@ func New(e *echo.Echo, ps domain.PostingUserCase) {
 	e.DELETE("/posting/delete", handler.DeleteData(), _middleware.JWTMiddleware())
 }
 
+// func (ph *postingHandler) InsertPosting() echo.HandlerFunc {
+// 	return func(c echo.Context) error {
+// 		id, _ := _middleware.ExtractData(c)
+// 		var tmp InsertFormat
+// 		err := c.Bind(&tmp)
+
+// 		if err != nil {
+// 			log.Println("cannot parse data", err)
+// 			c.JSON(http.StatusBadRequest, "error read input")
+// 		}
+
+// 		data, err := ph.postingUsercase.AddPosting(id, tmp.ToModel())
+
+// 		if err != nil {
+// 			log.Println("cannot proces data", err)
+// 			c.JSON(http.StatusInternalServerError, err)
+// 		}
+
+// 		return c.JSON(http.StatusCreated, map[string]interface{}{
+// 			"message": "success create data",
+// 			"data":    data,
+// 		})
+// 	}
+// }
+
 func (ph *postingHandler) InsertPosting() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id, _ := _middleware.ExtractData(c)
 		var tmp InsertFormat
+		idFromToken, _ := _middleware.ExtractData(c)
+		tmp.ID_Users = idFromToken
 		err := c.Bind(&tmp)
 
 		if err != nil {
-			log.Println("cannot parse data", err)
-			c.JSON(http.StatusBadRequest, "error read input")
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("failed to bind data, check your input"))
 		}
 
-		data, err := ph.postingUsercase.AddPosting(id, tmp.ToModel())
-
-		if err != nil {
-			log.Println("cannot proces data", err)
-			c.JSON(http.StatusInternalServerError, err)
+		dataPosting := tmp.ToModel()
+		row, errCreate := ph.postingUsercase.AddPosting(dataPosting)
+		if row == -1 {
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("please make sure all fields are filled in correctly"))
 		}
-
-		return c.JSON(http.StatusCreated, map[string]interface{}{
-			"message": "success create data",
-			"data":    data,
-		})
+		if errCreate != nil {
+			return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to create product, check your input"))
+		}
+		return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success"))
 	}
 }
 
