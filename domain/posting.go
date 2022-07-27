@@ -15,18 +15,20 @@ type UserPosting struct {
 	ID   int
 	Nama string
 }
+
+//kirim ke logic
 type PostingUseCase interface {
-	// AddPosting(userID int, newPosting Posting) (Posting, error)
 	AddPosting(data Posting) (result Posting, err error)
 	GetAllPosting() ([]Posting, error)
 	DeleteCase(postingID int) (row int, err error)
-	// UpdateCase(updatePost Posting) (Posting, error)
+	GetPostingById(id int) (data Posting, err error)
 }
 
+//kirim ke query
 type PostingData interface {
-	GetDetailPosting(idPosting int) (result Posting, err error)
+	GetUser(idPosting int) (result Posting, err error) //buat ambil nama id
 	InsertData(data Posting) (result Posting, err error)
 	GetPosting() []Posting
 	DeleteData(postingID int) (row int, err error)
-	// UpdatePost(updatePost Posting) Posting
+	SelectDataById(id int) (data Posting, err error)
 }

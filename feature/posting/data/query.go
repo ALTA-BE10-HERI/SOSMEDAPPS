@@ -18,7 +18,16 @@ func New(db *gorm.DB) domain.PostingData {
 	}
 }
 
-func (pd *postingData) GetDetailPosting(idPosting int) (result domain.Posting, err error) {
+func (pd *postingData) SelectDataById(id int) (data domain.Posting, err error) {
+	tmp := Posting{}
+	res := pd.db.Preload("User").Find(&tmp, id)
+	if res.Error != nil {
+		return domain.Posting{}, res.Error
+	}
+	return tmp.ToDomain(), nil
+}
+
+func (pd *postingData) GetUser(idPosting int) (result domain.Posting, err error) {
 	var tmp Posting
 	res := pd.db.Preload("User").Where("id = ?", idPosting).First(&tmp)
 	if res.Error != nil {
