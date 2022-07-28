@@ -46,3 +46,4 @@ export DBname="fox"
 export SECRET="h1d3n"
 export SERVERPORT=8080
 
+update note
