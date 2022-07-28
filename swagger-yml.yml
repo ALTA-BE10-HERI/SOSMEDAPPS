@@ -401,6 +401,17 @@ paths:
       tags:
         - Post
       description: fitur untuk melihat semua posting
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
       responses:
         "200":
           description: Success Response
@@ -476,9 +487,6 @@ paths:
         '500':
           description: "Internal server error"
 
-
- 
-  
   /comments/{id_posting}:
     get:
       tags:
@@ -564,8 +572,7 @@ paths:
                     }
         '500':
           description: "Internal server error"
-  /comments:
-
+  /comments/{id_comment}:
     delete:
       tags:
         - Comment
