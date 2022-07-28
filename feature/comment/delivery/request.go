@@ -3,15 +3,17 @@ package delivery
 import "cleanarch/domain"
 
 type CommentInsertFormat struct {
-	ID_Users   int
-	ID_Posting int
-	Comment    string `json:"comment" form:"comment"`
+	PostingID int    `json:"posting_id" form:"posting_id"`
+	Comment   string `json:"comment" form:"comment"`
+	UserID    int    `json:"user_id" form:"user_id"`
+	Nama      string `json:"nama" form:"nama"`
 }
 
 func (ci *CommentInsertFormat) ToDomain() domain.Comment {
 	return domain.Comment{
-		ID_Users:   ci.ID_Users,
-		ID_Posting: ci.ID_Posting,
-		Comment:    ci.Comment,
+		PostingID: ci.PostingID,
+		Comment:   ci.Comment,
+		UserID:    ci.UserID,
+		Nama:      ci.Nama,
 	}
 }
