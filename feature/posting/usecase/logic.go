@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"cleanarch/domain"
-	"errors"
 )
 
 type postingUseCase struct {
@@ -21,22 +20,20 @@ func (pd *postingUseCase) AddPosting(data domain.Posting) (result domain.Posting
 	return resultGet, err
 }
 
-func (pu *postingUseCase) GetAllPosting() ([]domain.Posting, error) {
-	res := pu.postingData.GetPosting()
+// func (pu *postingUseCase) GetAllPosting() ([]domain.Posting, error) {
+// 	res := pu.postingData.GetPosting()
 
-	if len(res) == 0 {
-		return nil, errors.New("no data")
-	}
+// 	if len(res) == 0 {
+// 		return nil, errors.New("no data")
+// 	}
 
-	return res, nil
-}
-
-// make logic delete for this function
-// func (pu *postingUseCase) DeleteCase(postingID int) (row int, err error) {
-// 	row, err = pu.postingData.DeleteData(postingID)
-// 	return row, err
+// 	return res, nil
 // }
 
+func (pu *postingUseCase) GetAllData(limit, offset int) (data []domain.Posting, err error) {
+	res, err := pu.postingData.SelectData(limit, offset)
+	return res, err
+}
 func (pu *postingUseCase) DeleteCase(idPosting, idFromToken int) (row int, err error) {
 	row, err = pu.postingData.DeleteDataById(idPosting, idFromToken)
 	return row, err

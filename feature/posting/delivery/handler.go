@@ -5,7 +5,6 @@ import (
 	_middleware "cleanarch/feature/common"
 	_helper "cleanarch/helper"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -50,38 +49,38 @@ func (ph *postingHandler) InsertPosting() echo.HandlerFunc {
 	}
 }
 
+// func (ph *postingHandler) GetAllPosting() echo.HandlerFunc {
+// 	return func(c echo.Context) error {
+// 		data, err := ph.postingUsercase.GetAllPosting()
+
+// 		if err != nil {
+// 			log.Println("cannot proces data", err)
+// 			c.JSON(http.StatusInternalServerError, err)
+// 		}
+
+// 		return c.JSON(http.StatusOK, map[string]interface{}{
+// 			"message": "success get data",
+// 			"data":    data,
+// 		})
+// 	}
+// }
+
 func (ph *postingHandler) GetAllPosting() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		data, err := ph.postingUsercase.GetAllPosting()
+		limit := c.QueryParam("limit")
+		offset := c.QueryParam("offset")
+		limitint, _ := strconv.Atoi(limit)
+		offsetint, _ := strconv.Atoi(offset)
 
+		res, err := ph.postingUsercase.GetAllData(limitint, offsetint)
 		if err != nil {
-			log.Println("cannot proces data", err)
-			c.JSON(http.StatusInternalServerError, err)
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("canot to read all data"))
 		}
+		return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", FromModelList(res)))
 
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "success get data",
-			"data":    data,
-		})
 	}
 }
 
-// func (ph *postingHandler) DeleteData() echo.HandlerFunc {
-// 	return func(c echo.Context) error {
-// 		id, _ := _middleware.ExtractData(c)
-// 		if id == 0 {
-// 			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("error read input"))
-// 		}
-// 		row, errDel := ph.postingUsercase.DeleteCase(id)
-// 		if errDel != nil {
-// 			return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to delete data"))
-// 		}
-// 		if row == 0 {
-// 			return c.JSON(http.StatusNotFound, _helper.ResponseFailed("data not found"))
-// 		}
-// 		return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success delete data"))
-// 	}
-// }
 func (ph *postingHandler) DeleteData() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id := c.Param("id")

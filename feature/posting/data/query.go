@@ -3,7 +3,6 @@ package data
 import (
 	"cleanarch/domain"
 	"errors"
-	"log"
 
 	"gorm.io/gorm"
 )
@@ -48,29 +47,25 @@ func (pd *postingData) InsertData(newPosting domain.Posting) (result domain.Post
 	return posting.ToDomain(), err
 }
 
-func (pd *postingData) GetPosting() []domain.Posting {
-	var tmp []Posting
-	err := pd.db.Limit(10).Find(&tmp).Error
-	if err != nil {
-		log.Println("There is a problem with data", err.Error())
-		return nil
-	}
-
-	return ParseToArrPosting(tmp)
-}
-
-// func (pd *postingData) DeleteData(postingID int) (row int, err error) {
-// 	res := pd.db.Delete(&Posting{}, postingID)
-// 	if res.Error != nil {
-// 		log.Println("cannot delete data", res.Error.Error())
-// 		return 0, res.Error
+// func (pd *postingData) GetPosting() []domain.Posting {
+// 	var tmp []Posting
+// 	err := pd.db.Limit(10).Find(&tmp).Error
+// 	if err != nil {
+// 		log.Println("There is a problem with data", err.Error())
+// 		return nil
 // 	}
-// 	if res.RowsAffected < 1 {
-// 		log.Println("no data deleted", res.Error.Error())
-// 		return 0, errors.New("dailed to data deleted")
-// 	}
-// 	return int(res.RowsAffected), nil
+
+// 	return ParseToArrPosting(tmp)
 // }
+
+func (pd *postingData) SelectData(limit, offset int) (data []domain.Posting, err error) {
+	dataPosting := []Posting{}
+	res := pd.db.Preload("User").Limit(limit).Offset(offset).Find(&dataPosting)
+	if res.Error != nil {
+		return []domain.Posting{}, nil
+	}
+	return ParseToArrPosting(dataPosting), nil
+}
 
 func (pd *postingData) DeleteDataById(idPosting, idFromToken int) (row int, err error) {
 	dataPosting := Posting{}
