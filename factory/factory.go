@@ -12,6 +12,10 @@ import (
 	pd "cleanarch/feature/posting/data"
 	postingDelivery "cleanarch/feature/posting/delivery"
 	pu "cleanarch/feature/posting/usecase"
+
+	cd "cleanarch/feature/comment/data"
+	commentDelivery "cleanarch/feature/comment/delivery"
+	cu "cleanarch/feature/comment/usecase"
 )
 
 func InitFactory(e *echo.Echo, db *gorm.DB) {
@@ -23,4 +27,8 @@ func InitFactory(e *echo.Echo, db *gorm.DB) {
 	postingData := pd.New(db)
 	PostingUserCase := pu.New(postingData)
 	postingDelivery.New(e, PostingUserCase)
+
+	commentData := cd.New(db)
+	CommentUseCase := cu.New(commentData)
+	commentDelivery.New(e, CommentUseCase)
 }

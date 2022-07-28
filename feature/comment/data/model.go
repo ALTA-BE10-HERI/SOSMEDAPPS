@@ -8,25 +8,41 @@ import (
 
 type Comment struct {
 	gorm.Model
-	ID_Users   int
-	ID_Posting int
-	Comment    string `json:"comment" form:"comment"`
+	PostingID int
+	UserID    int
+	Comment   string  `json:"comment" form:"comment"`
+	User      User    `gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	Posting   Posting `gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+}
+
+type User struct {
+	gorm.Model
+	Nama    string
+	Comment []Comment
+}
+
+type Posting struct {
+	gorm.Model
 }
 
 func (c *Comment) ToDomain() domain.Comment {
 	return domain.Comment{
-		ID:         int(c.ID),
-		ID_Users:   c.ID_Users,
-		ID_Posting: c.ID_Posting,
-		Comment:    c.Comment,
-		Created_at: c.CreatedAt,
+		PostingID: int(c.PostingID),
+		ID:        int(c.ID),
+		Comment:   c.Comment,
+		Createdat: c.CreatedAt,
+		UserID:    int(c.UserID),
+		User: domain.UserComment{
+			ID:   int(c.User.ID),
+			Nama: c.User.Nama,
+		},
 	}
 }
 
-func ParseToArrComment(arr []Comment) []domain.Comment {
+func parseToArrComment(arr []Comment) []domain.Comment {
 	var res []domain.Comment
-	for _, val := range arr {
-		res = append(res, val.ToDomain())
+	for val := range arr {
+		res = append(res, arr[val].ToDomain())
 	}
 
 	return res
@@ -34,8 +50,8 @@ func ParseToArrComment(arr []Comment) []domain.Comment {
 
 func FromDomain(data domain.Comment) Comment {
 	var res Comment
-	res.ID_Users = data.ID_Users
-	res.ID_Posting = data.ID_Posting
+	res.UserID = data.UserID
+	res.PostingID = data.PostingID
 	res.Comment = data.Comment
 	return res
 }

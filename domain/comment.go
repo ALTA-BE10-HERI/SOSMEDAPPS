@@ -5,22 +5,30 @@ import (
 )
 
 type Comment struct {
-	ID         int
-	Comment    string
-	Created_at time.Time
-	Deleted_at time.Time
-	ID_Users   int
-	ID_Posting int
+	ID        int
+	Comment   string
+	Createdat time.Time
+	Deletedat time.Time
+	UserID    int
+	PostingID int
+	Nama      string
+	User      UserComment
+	Posting   Posting
+}
+
+type UserComment struct {
+	ID   int
+	Nama string
 }
 
 type CommentUseCase interface {
-	AddComment(ID_Users int, newText Comment) (Comment, error)
-	GetAllComment() ([]Comment, error)
-	DeleteComment(IDComment int) (row int, err error)
+	CreateData(input Comment) (row int, err error)
+	GetCommentByIdPosting(idPosting, limitint, offsetint int) (data []Comment, err error)
+	// DeleteCommentById(idComment, idFromToken int) (row int, err error)
 }
 
 type CommentData interface {
-	Insert(newText Comment) Comment
-	GetComment() []Comment
-	Delete(IDComment int) (row int, err error)
+	InsertData(input Comment) (row int, err error)
+	SelectCommentByIdPosting(idPosting, limitint, offsetint int) (data []Comment, err error)
+	// DeleteCommentByIdComment(idComment, idFromToken int) (row int, err error)
 }
