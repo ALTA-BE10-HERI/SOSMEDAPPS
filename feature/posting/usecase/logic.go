@@ -20,16 +20,6 @@ func (pd *postingUseCase) AddPosting(data domain.Posting) (result domain.Posting
 	return resultGet, err
 }
 
-// func (pu *postingUseCase) GetAllPosting() ([]domain.Posting, error) {
-// 	res := pu.postingData.GetPosting()
-
-// 	if len(res) == 0 {
-// 		return nil, errors.New("no data")
-// 	}
-
-// 	return res, nil
-// }
-
 func (pu *postingUseCase) GetAllData(limit, offset int) (data []domain.Posting, err error) {
 	res, err := pu.postingData.SelectData(limit, offset)
 	return res, err

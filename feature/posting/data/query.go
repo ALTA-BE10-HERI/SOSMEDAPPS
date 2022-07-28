@@ -47,17 +47,6 @@ func (pd *postingData) InsertData(newPosting domain.Posting) (result domain.Post
 	return posting.ToDomain(), err
 }
 
-// func (pd *postingData) GetPosting() []domain.Posting {
-// 	var tmp []Posting
-// 	err := pd.db.Limit(10).Find(&tmp).Error
-// 	if err != nil {
-// 		log.Println("There is a problem with data", err.Error())
-// 		return nil
-// 	}
-
-// 	return ParseToArrPosting(tmp)
-// }
-
 func (pd *postingData) SelectData(limit, offset int) (data []domain.Posting, err error) {
 	dataPosting := []Posting{}
 	res := pd.db.Preload("User").Limit(limit).Offset(offset).Find(&dataPosting)
