@@ -74,6 +74,7 @@ paths:
     post:
       tags:
         - Authentication
+      description: fitur untuk registrasi user
       parameters: []
       requestBody:
         content:
@@ -128,7 +129,7 @@ paths:
     get:
       tags:
         - Users
-      description: fitur untuk melihat profil yang login
+      description: fitur untuk melihat detail profil
       security:
         - JWTAuth: []
       responses:
@@ -214,10 +215,11 @@ paths:
     delete:
       tags:
         - Users
+      description: fitur untuk menghapus user
       security:
         - JWTAuth: []
       parameters:
-        - name: iduser
+        - name: id_user
           in: query
           schema:
             type: integer
@@ -251,7 +253,14 @@ paths:
     get:
       tags:
         - Post
-      description: fitur untuk melihat profil yang login
+      description: fitur untuk melihat detail posting
+      parameters:
+        - name: id_post
+          in: query
+          schema:
+            type: integer
+            example: 1
+          required: true
       responses:
         "200":
           description: Success Response
@@ -292,7 +301,7 @@ paths:
       security:
         - JWTAuth: []
       parameters:
-        - name: idpost
+        - name: id_post
           in: query
           schema:
             type: integer
@@ -330,7 +339,7 @@ paths:
       security:
         - JWTAuth: []
       parameters:
-        - name: idpost
+        - name: id_post
           in: query
           schema:
             type: integer
@@ -391,7 +400,7 @@ paths:
     get:
       tags:
         - Post
-      description: fitur untuk melihat profil yang login
+      description: fitur untuk melihat semua posting
       responses:
         "200":
           description: Success Response
