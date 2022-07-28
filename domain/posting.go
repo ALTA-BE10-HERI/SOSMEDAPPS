@@ -20,7 +20,7 @@ type UserPosting struct {
 type PostingUseCase interface {
 	AddPosting(data Posting) (result Posting, err error)
 	GetAllPosting() ([]Posting, error)
-	DeleteCase(postingID int) (row int, err error)
+	DeleteCase(idPosting, idFromToken int) (row int, err error)
 	GetPostingById(id int) (data Posting, err error)
 	UpdateData(data Posting, idPosting, idFromToken int) (row int, err error)
 }
@@ -30,7 +30,7 @@ type PostingData interface {
 	GetUser(idPosting int) (result Posting, err error) //buat ambil nama id
 	InsertData(data Posting) (result Posting, err error)
 	GetPosting() []Posting
-	DeleteData(postingID int) (row int, err error)
+	DeleteDataById(idPosting, idFromToken int) (row int, err error)
 	SelectDataById(id int) (data Posting, err error)
 	UpdateData(data map[string]interface{}, idPosting, idFromToken int) (res int, err error)
 }

@@ -32,8 +32,13 @@ func (pu *postingUseCase) GetAllPosting() ([]domain.Posting, error) {
 }
 
 // make logic delete for this function
-func (pu *postingUseCase) DeleteCase(postingID int) (row int, err error) {
-	row, err = pu.postingData.DeleteData(postingID)
+// func (pu *postingUseCase) DeleteCase(postingID int) (row int, err error) {
+// 	row, err = pu.postingData.DeleteData(postingID)
+// 	return row, err
+// }
+
+func (pu *postingUseCase) DeleteCase(idPosting, idFromToken int) (row int, err error) {
+	row, err = pu.postingData.DeleteDataById(idPosting, idFromToken)
 	return row, err
 }
 

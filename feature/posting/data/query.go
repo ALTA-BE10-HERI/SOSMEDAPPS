@@ -59,15 +59,35 @@ func (pd *postingData) GetPosting() []domain.Posting {
 	return ParseToArrPosting(tmp)
 }
 
-func (pd *postingData) DeleteData(postingID int) (row int, err error) {
-	res := pd.db.Delete(&Posting{}, postingID)
+// func (pd *postingData) DeleteData(postingID int) (row int, err error) {
+// 	res := pd.db.Delete(&Posting{}, postingID)
+// 	if res.Error != nil {
+// 		log.Println("cannot delete data", res.Error.Error())
+// 		return 0, res.Error
+// 	}
+// 	if res.RowsAffected < 1 {
+// 		log.Println("no data deleted", res.Error.Error())
+// 		return 0, errors.New("dailed to data deleted")
+// 	}
+// 	return int(res.RowsAffected), nil
+// }
+
+func (pd *postingData) DeleteDataById(idPosting, idFromToken int) (row int, err error) {
+	dataPosting := Posting{}
+	cekID := pd.db.First(&dataPosting, idPosting)
+	if cekID.Error != nil {
+		return 0, cekID.Error
+	}
+	if idFromToken != int(dataPosting.UserID) {
+		return -1, errors.New("you don`t have acces")
+	}
+
+	res := pd.db.Delete(&Posting{}, idPosting)
 	if res.Error != nil {
-		log.Println("cannot delete data", res.Error.Error())
 		return 0, res.Error
 	}
-	if res.RowsAffected < 1 {
-		log.Println("no data deleted", res.Error.Error())
-		return 0, errors.New("dailed to data deleted")
+	if res.RowsAffected != 1 {
+		return 0, errors.New("failed to delete data")
 	}
 	return int(res.RowsAffected), nil
 }
