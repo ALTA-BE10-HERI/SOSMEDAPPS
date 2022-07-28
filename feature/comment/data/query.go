@@ -18,23 +18,24 @@ func New(db *gorm.DB) domain.CommentData {
 	}
 }
 
-func (cd *commentData) Insert(newText domain.Comment) domain.Comment {
-	var cnv = FromDomain(newText)
-	err := cd.db.Create(&cnv).Error
-	if err != nil {
-		log.Println("cannot create comment", err.Error())
-		return domain.Comment{}
+func (cd *commentData) Insert(newText domain.Comment) (result domain.Comment, err error) {
+	comment := FromDomain(newText)
+	res := cd.db.Create(&comment)
+	if res.Error != nil {
+		return domain.Comment{}, res.Error
 	}
-
-	return cnv.ToDomain()
+	if res.RowsAffected != 1 {
+		return domain.Comment{}, errors.New("failed to insert data")
+	}
+	return comment.ToDomain(), err
 }
 
 func (cd *commentData) GetComment() []domain.Comment {
 	var data []Comment
-	err := cd.db.Find(&data)
+	err := cd.db.Limit(10).Find(&data).Error
 
-	if err.Error != nil {
-		log.Println("Cannot read comment", err.Error.Error())
+	if err != nil {
+		log.Println("Cannot read comment", err.Error())
 		return nil
 	}
 

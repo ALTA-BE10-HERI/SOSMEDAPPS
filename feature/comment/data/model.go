@@ -10,7 +10,25 @@ type Comment struct {
 	gorm.Model
 	ID_Users   int
 	ID_Posting int
-	Comment    string `json:"comment" form:"comment"`
+	Comment    string  `json:"comment" form:"comment"`
+	User       User    `gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
+	Posting    Posting `gorm:"foreignKey:PostingID;references:ID;constraint:OnDelete:CASCADE"`
+}
+
+type User struct {
+	gorm.Model
+	Nama     string
+	Email    string `gorm:"unique"`
+	Password string
+	Comment  []Comment `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+
+type Posting struct {
+	gorm.Model
+	Content string `json:"content" form:"content"`
+	Image   string `json:"image" form:"image"`
+	UserID  int
+	User    User `gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 }
 
 func (c *Comment) ToDomain() domain.Comment {

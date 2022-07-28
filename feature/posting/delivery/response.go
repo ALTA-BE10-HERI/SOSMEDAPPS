@@ -28,10 +28,10 @@ func FromModel(data domain.Posting) Posting {
 	}
 }
 
-func FromModelList(data []domain.Posting) []Posting {
-	result := []Posting{}
-	for key := range data {
-		result = append(result, FromModel(data[key]))
-	}
-	return result
-}
+// func FromModelList(data []domain.Posting) []Posting {
+// 	result := []Posting{}
+// 	for key := range data {
+// 		result = append(result, FromModel(data[key]))
+// 	}
+// 	return result
+// }

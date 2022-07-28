@@ -4,6 +4,7 @@ import (
 	"cleanarch/domain"
 	_middleware "cleanarch/feature/common"
 	_helper "cleanarch/helper"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -25,27 +26,24 @@ func New(e *echo.Echo, cs domain.CommentUseCase) {
 }
 func (ch *commentHandler) InsertComment() echo.HandlerFunc {
 	return func(c echo.Context) error {
-
 		var tmp CommentInsertFormat
+		idFromToken, _ := _middleware.ExtractData(c)
 		err := c.Bind(&tmp)
+		tmp.ID_Users = idFromToken
+		tmp.ID_Posting = tmp.ToModel().ID_Posting
 
 		if err != nil {
-			log.Println("cannot parse data", err)
-			c.JSON(http.StatusBadRequest, "error read input")
+			c.JSON(http.StatusBadRequest, _helper.ResponseFailed("failed to bind data"))
 		}
 
-		id, _ := _middleware.ExtractData(c)
-		data, err := ch.commentUsecase.AddComment(id, tmp.ToDomain())
-
-		if err != nil {
-			log.Println("Cannot create comment", err)
-			c.JSON(http.StatusInternalServerError, err)
+		dataComment := tmp.ToModel()
+		result, errCreate := ch.commentUsecase.AddComment(dataComment)
+		if errCreate != nil {
+			return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to create comment"))
 		}
+		fmt.Println(result)
+		return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", FromModel(result)))
 
-		return c.JSON(http.StatusCreated, map[string]interface{}{
-			"message": "Success create comment",
-			"data":    data,
-		})
 	}
 }
 
@@ -54,7 +52,8 @@ func (ch *commentHandler) GetAllComment() echo.HandlerFunc {
 		data, err := ch.commentUsecase.GetAllComment()
 
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, err.Error())
+			log.Println("cannot proccess data", err)
+			c.JSON(http.StatusInternalServerError, err)
 		}
 
 		return c.JSON(http.StatusFound, map[string]interface{}{

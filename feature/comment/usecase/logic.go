@@ -2,37 +2,32 @@ package usecase
 
 import (
 	"cleanarch/domain"
+	// "cleanarch/feature/posting/usecase/logic"
 	"errors"
-
-	"github.com/go-playground/validator/v10"
 )
 
 type commentUseCase struct {
-	data      domain.CommentData
-	validator *validator.Validate
+	commentData domain.CommentData
 }
 
-func New(model domain.CommentData) domain.CommentUseCase {
+func New(cd domain.CommentData) domain.CommentUseCase {
 	return &commentUseCase{
-		data: model,
+		commentData: cd,
 	}
 }
 
-func (cs *commentUseCase) AddComment(IDLogin int, newText domain.Comment) (domain.Comment, error) {
-	if IDLogin == -1 {
-		return domain.Comment{}, errors.New("invalid user")
-	}
+func (pu *domain.PostingUseCase) AddPosting(postById domain.Posting) (result domain.Posting, err error) {
+	result, err = pd.postingData.InsertData(postById)
+	resultGet, _ := pd.postingData.GetDetailPosting(result.ID)
+	return resultGet, err
+}
 
-	res := cs.data.Insert(newText)
-	if res.ID == 0 {
-		return domain.Comment{}, errors.New("failed to create comment")
-	}
-
-	return res, nil
+func (cs *commentUseCase) AddComment(data domain.Comment) (result domain.Comment, err error) {
 
 }
 
 func (cs *commentUseCase) GetAllComment() ([]domain.Comment, error) {
+
 	res := cs.data.GetComment()
 
 	if len(res) == 0 {

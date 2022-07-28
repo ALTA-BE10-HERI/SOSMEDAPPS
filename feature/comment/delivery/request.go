@@ -1,17 +1,24 @@
 package delivery
 
-import "cleanarch/domain"
+import (
+	"cleanarch/domain"
+
+	"gorm.io/gorm"
+)
 
 type CommentInsertFormat struct {
+	gorm.Model
+	Comment    string `json:"comment" form:"comment"`
 	ID_Users   int
 	ID_Posting int
-	Comment    string `json:"comment" form:"comment"`
 }
 
-func (ci *CommentInsertFormat) ToDomain() domain.Comment {
+func (ci *CommentInsertFormat) ToModel() domain.Comment {
 	return domain.Comment{
-		ID_Users:   ci.ID_Users,
-		ID_Posting: ci.ID_Posting,
-		Comment:    ci.Comment,
+		Comment:  ci.Comment,
+		ID_Users: ci.ID_Users,
+		Posting: domain.PostingComment{
+			ID: ci.ID_Posting,
+		},
 	}
 }
