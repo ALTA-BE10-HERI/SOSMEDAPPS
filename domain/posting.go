@@ -1,6 +1,8 @@
 package domain
 
-import "time"
+import (
+	"time"
+)
 
 type Posting struct {
 	ID         int
@@ -14,6 +16,12 @@ type Posting struct {
 type UserPosting struct {
 	ID   int
 	Nama string
+}
+
+type CommentPosting struct {
+	ID     int
+	Conten string
+	Image  string
 }
 
 //kirim ke logic

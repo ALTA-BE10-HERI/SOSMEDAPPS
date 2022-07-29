@@ -2,19 +2,22 @@ package delivery
 
 import (
 	"cleanarch/domain"
+	"time"
 )
 
 type Comment struct {
-	ID      int `json:"id"`
-	Nama    string
-	Comment string `json:"comment"`
+	ID        int `json:"id"`
+	Nama      string
+	Comment   string `json:"comment"`
+	Createdat time.Time
 }
 
 func FromModel(data domain.Comment) Comment {
 	return Comment{
-		ID:      data.ID,
-		Nama:    data.Nama,
-		Comment: data.Comment,
+		ID:        data.ID,
+		Nama:      data.User.Nama,
+		Comment:   data.Comment,
+		Createdat: data.Createdat,
 	}
 }
 

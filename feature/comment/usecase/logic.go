@@ -27,3 +27,8 @@ func (cs *commentUseCase) GetCommentByIdPosting(idPosting, limitint, offsetint i
 	data, err = cs.data.SelectCommentByIdPosting(idPosting, limitint, offsetint)
 	return data, err
 }
+
+func (cs *commentUseCase) DeleteCommentById(idComment, idFromToken int) (row int, err error) {
+	data, err := cs.data.DeleteCommentByIdComment(idComment, idFromToken)
+	return data, err
+}
