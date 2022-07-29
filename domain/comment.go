@@ -24,11 +24,11 @@ type UserComment struct {
 type CommentUseCase interface {
 	CreateData(input Comment) (row int, err error)
 	GetCommentByIdPosting(idPosting, limitint, offsetint int) (data []Comment, err error)
-	// DeleteCommentById(idComment, idFromToken int) (row int, err error)
+	DeleteCommentById(idComment, idFromToken int) (row int, err error)
 }
 
 type CommentData interface {
 	InsertData(input Comment) (row int, err error)
 	SelectCommentByIdPosting(idPosting, limitint, offsetint int) (data []Comment, err error)
-	// DeleteCommentByIdComment(idComment, idFromToken int) (row int, err error)
+	DeleteCommentByIdComment(idComment, idFromToken int) (row int, err error)
 }

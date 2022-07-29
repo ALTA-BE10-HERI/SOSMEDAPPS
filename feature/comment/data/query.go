@@ -42,3 +42,22 @@ func (cd *commentData) SelectCommentByIdPosting(idPosting, limitint, offsetint i
 	}
 	return parseToArrComment(comment), nil
 }
+
+func (cd *commentData) DeleteCommentByIdComment(idComment, idFromToken int) (row int, err error) {
+	dataComment := Comment{}
+	idCheck := cd.db.First(&dataComment, idComment)
+	if idCheck.Error != nil {
+		return 0, idCheck.Error
+	}
+	if idFromToken != dataComment.UserID {
+		return -1, errors.New("you don't have access")
+	}
+	result := cd.db.Delete(&Comment{}, idComment)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	if result.RowsAffected != 1 {
+		return 0, errors.New("failed to delete data")
+	}
+	return int(result.RowsAffected), nil
+}

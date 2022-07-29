@@ -22,7 +22,7 @@ func New(e *echo.Echo, cs domain.CommentUseCase) {
 
 	e.POST("/comments/:id", handler.InsertComment(), _middleware.JWTMiddleware())
 	e.GET("/comments/:id", handler.GetAllComment())
-	// e.DELETE("/comments", handler.DeleteComment(), _middleware.JWTMiddleware())
+	e.DELETE("/comments/:id", handler.DeleteComment(), _middleware.JWTMiddleware())
 }
 func (ch *commentHandler) InsertComment() echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -64,5 +64,22 @@ func (ch *commentHandler) GetAllComment() echo.HandlerFunc {
 		}
 		log.Println("cek ", res)
 		return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", FromModelList(res)))
+	}
+}
+
+func (ch *commentHandler) DeleteComment() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := c.Param("id")
+		idComment, _ := strconv.Atoi(id)
+		idFromToken, _ := _middleware.ExtractData(c)
+		row, errDelelete := ch.commentUsecase.DeleteCommentById(idComment, idFromToken)
+		if errDelelete != nil {
+			return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to delete data user"))
+		}
+		if row != 1 {
+			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("failed to delete data user"))
+		}
+
+		return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success"))
 	}
 }
