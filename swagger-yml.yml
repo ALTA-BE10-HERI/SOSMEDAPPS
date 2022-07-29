@@ -51,7 +51,7 @@ paths:
                       message: "login success",
                       data:
                         {
-                          name: "alex",
+                          nama: "alex",
                           token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co",
                         },
                     }
@@ -82,7 +82,7 @@ paths:
             schema:
               $ref: "#"
             example:
-              name: alex
+              nama: alex
               email: alexalttera@mail.com
               password: qwerty123
       responses:

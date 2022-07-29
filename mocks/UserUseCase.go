@@ -4,6 +4,7 @@ package mocks
 
 import (
 	domain "cleanarch/domain"
+	"cleanarch/feature/user"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -34,22 +35,90 @@ func (_m *UserUseCase) AddUser(newUser domain.User) (domain.User, error) {
 	return r0, r1
 }
 
-// GetAll provides a mock function with given fields:
-func (_m *UserUseCase) GetAll() ([]domain.User, error) {
-	ret := _m.Called()
+// GetProfile provides a mock function with given fields: id
+func (_m *UserUseCase) GetProfile(id int) (domain.User, error) {
+	ret := _m.Called(id)
 
-	var r0 []domain.User
-	if rf, ok := ret.Get(0).(func() []domain.User); ok {
-		r0 = rf()
+	var r0 domain.User
+	if rf, ok := ret.Get(0).(func(int) domain.User); ok {
+		r0 = rf(id)
 	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]domain.User)
-		}
+		r0 = ret.Get(0).(domain.User)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+//LoginUserCase provides a mock function with given fields: authData
+func (_m *UserUseCase) LoginUserCase(authData user.LoginModel) (token, name string, err error) {
+	ret := _m.Called(authData)
+
+	var r0 string
+	if rf, ok := ret.Get(0).(func(user.LoginModel) string); ok {
+		r0 = rf(authData)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	var r1 string
+	if rf, ok := ret.Get(1).(func(user.LoginModel) string); ok {
+		r1 = rf(authData)
+	} else {
+		r1 = ret.Get(1).(string)
+	}
+
+	var r2 error
+	if rf, ok := ret.Get(2).(func(user.LoginModel) error); ok {
+		r2 = rf(authData)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
+//DeleteCase provide a mock function with given fields: userID
+func (_m *UserUseCase) DeleteCase(userID int) (row int, err error) {
+	ret := _m.Called(userID)
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func(int) int); ok {
+		r0 = rf(userID)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(userID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+//UpdateCase provide a mock function with given fields: input, idUser
+func (_m *UserUseCase) UpdateCase(input domain.User, idUser int) (row int, err error) {
+	ret := _m.Called(input, idUser)
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func(domain.User, int) int); ok {
+		r0 = rf(input, idUser)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(domain.User, int) error); ok {
+		r1 = rf(input, idUser)
 	} else {
 		r1 = ret.Error(1)
 	}

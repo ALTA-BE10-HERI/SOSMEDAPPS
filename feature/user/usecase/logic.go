@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/go-playground/validator"
+	"github.com/go-playground/validator/v10"
 	_bcrypt "golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
