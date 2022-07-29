@@ -513,17 +513,12 @@ paths:
                   description: response success
                   value:
                    {
-                      id: 1,
-                      comment: ini adalah komen pertamaku,
-                      createdat: 0001-01-01T00:00:00Z,
-                      id_user: 2,
-                      posting:
-                        {
-                        id_posting: 1,
-                        content: "ini adalah status pertamaku di story six3",
-                        image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
-                        }
-                    }
+                    id: 8,
+                    nama: "alterraupdate",
+                    comment: "ini comment",
+                    createdat: "2022-07-29T01:16:00.121Z"                    
+                  }
+
         '500':
           description: "Internal server error"
     post:
@@ -559,16 +554,10 @@ paths:
                   description: response success
                   value:
                     {
-                      id: 1,
-                      comment: ini adalah komen pertamaku,
-                      createdat: 0001-01-01T00:00:00Z,
-                      id_user: 2,
-                      posting:
-                        {
-                        id_posting: 1,
-                        content: "ini adalah status pertamaku di story six3",
-                        image: "https://gudanggroup3.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
-                        }
+                      id: 4,
+                      nama: "alterraupdate",
+                      comment: "ini heri",
+                      createdat: "2022-07-28T20:41:21.141Z"
                     }
         '500':
           description: "Internal server error"
@@ -579,7 +568,13 @@ paths:
       description: fitur untuk menghapus komentar
       security:
         - JWTAuth: []
-
+      parameters:
+        - in: path
+          name: id_comment
+          required: true
+          schema:
+            type: integer
+            example: 1
       responses:
         "200":
           description: Success Response
