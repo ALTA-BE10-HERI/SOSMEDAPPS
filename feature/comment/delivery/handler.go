@@ -66,35 +66,3 @@ func (ch *commentHandler) GetAllComment() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, _helper.ResponseOkWithData("success", FromModelList(res)))
 	}
 }
-
-// func (ch *commentHandler) GetAllComment() echo.HandlerFunc {
-// 	return func(c echo.Context) error {
-// 		data, err := ch.commentUsecase.GetAllComment()
-
-// 		if err != nil {
-// 			return c.JSON(http.StatusInternalServerError, err.Error())
-// 		}
-
-// 		return c.JSON(http.StatusFound, map[string]interface{}{
-// 			"message": "data found",
-// 			"data":    data,
-// 		})
-// 	}
-// }
-
-// func (ch *commentHandler) DeleteComment() echo.HandlerFunc {
-// 	return func(c echo.Context) error {
-// 		token, _ := _middleware.ExtractData(c)
-// 		if token == 0 {
-// 			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("you dont have access"))
-// 		}
-// 		row, errDel := ch.commentUsecase.DeleteComment(token)
-// 		if errDel != nil {
-// 			return c.JSON(http.StatusInternalServerError, _helper.ResponseFailed("failed to delete data user"))
-// 		}
-// 		if row != 1 {
-// 			return c.JSON(http.StatusBadRequest, _helper.ResponseFailed("failed to delete data user"))
-// 		}
-// 		return c.JSON(http.StatusOK, _helper.ResponseOkNoData("success"))
-// 	}
-// }
